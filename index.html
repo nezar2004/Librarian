@@ -299,7 +299,76 @@
         font-size:36px;
       }
     }
+    .menu-toggle{
 
+  nav{
+    padding:20px 6%;
+  }
+
+  .menu-toggle{
+    display:block;
+  }
+
+  nav ul{
+    position:absolute;
+    top:90px;
+    right:0;
+    width:100%;
+    background:#0f172a;
+    flex-direction:column;
+    text-align:center;
+    padding:30px 0;
+    display:none;
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+
+  nav ul.active{
+    display:flex;
+  }
+
+  nav ul li{
+    margin:15px 0;
+  }
+
+  .hero{
+    padding:150px 6% 100px;
+  }
+
+  .hero h1{
+    font-size:38px;
+    line-height:1.5;
+  }
+
+  .hero p{
+    font-size:18px;
+  }
+
+  .hero-buttons{
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .btn{
+    width:100%;
+    max-width:300px;
+  }
+
+  .section-title h2{
+    font-size:34px;
+  }
+
+  .cards,
+  .features,
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .card,
+  .feature,
+  .stat{
+    padding:25px;
+  }
+}
   </style>
 </head>
 
@@ -308,15 +377,21 @@
   <!-- NAVBAR -->
 
   <nav>
-    <div class="logo">LMS</div>
 
-    <ul>
+    <div class="logo">LMS</div>
+  
+    <div class="menu-toggle" id="menu-toggle">
+      ☰
+    </div>
+  
+    <ul id="mobile-menu">
       <li><a href="#">الرئيسية</a></li>
       <li><a href="#">الخدمات</a></li>
       <li><a href="#">المميزات</a></li>
       <li><a href="#">التقارير</a></li>
       <li><a href="#">تواصل</a></li>
     </ul>
+  
   </nav>
 
   <!-- HERO -->
@@ -486,6 +561,15 @@
   <footer>
     © 2026 Library Management System | جميع الحقوق محفوظة
   </footer>
+<script>
 
+const menuToggle = document.getElementById('menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+
+menuToggle.onclick = () => {
+  mobileMenu.classList.toggle('active');
+}
+
+</script>
 </body>
 </html>
