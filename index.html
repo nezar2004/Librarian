@@ -441,13 +441,13 @@
 
       <div class="hero-buttons">
 
-		  <a href="student_login.html">
+		  <a href="student-login.html">
 			<button class="btn btn-primary">
 			  🎓 دخول الطالب
 			</button>
 		  </a>
 
-		  <a href="admin_login.html">
+		  <a href="admin-login.html">
 			<button class="btn btn-secondary">
 			  👨‍💼 دخول أمين المكتبة
 			</button>
@@ -653,34 +653,34 @@
 
   <section>
 
-    <div class="section-title">
-      <h2>إحصائيات النظام</h2>
-      <p>أداء عالي وتجربة احترافية</p>
-    </div>
+	  <div class="section-title">
+		<h2>إحصائيات النظام</h2>
+		<p>إحصائيات حقيقية مباشرة من قاعدة البيانات</p>
+	  </div>
 
-    <div class="stats">
+	  <div class="stats">
 
-      <div class="stat">
-        <h2>5000+</h2>
-        <p>كتاب</p>
-      </div>
+		<div class="stat">
+		  <h2 id="books-count">0</h2>
+		  <p>كتاب</p>
+		</div>
 
-      <div class="stat">
-        <h2>1200+</h2>
-        <p>عضو</p>
-      </div>
+		<div class="stat">
+		  <h2 id="students-count">0</h2>
+		  <p>طالب</p>
+		</div>
 
-      <div class="stat">
-        <h2>98%</h2>
-        <p>رضا المستخدمين</p>
-      </div>
+		<div class="stat">
+		  <h2 id="borrowed-count">0</h2>
+		  <p>كتاب مستعار</p>
+		</div>
 
-      <div class="stat">
-        <h2>24/7</h2>
-        <p>دعم وتشغيل</p>
-      </div>
+		<div class="stat">
+		  <h2 id="returned-count">0</h2>
+		  <p>كتاب مُرجع</p>
+		</div>
 
-    </div>
+	  </div>
 
   </section>
 
@@ -725,6 +725,97 @@
     // اظهار موقع الجامعة
     document.getElementById('yuFrame').style.display = 'block';
   }
+
+</script>
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+getDocs,
+query,
+where
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyCkCR-nUCHQYRiLILTdSzCeYn2CTB94ILQ",
+
+authDomain: "laib-64c9b.firebaseapp.com",
+
+projectId: "laib-64c9b",
+
+storageBucket: "laib-64c9b.firebasestorage.app",
+
+messagingSenderId: "429556863392",
+
+appId: "1:429556863392:web:1cffe618fd87b6606914c5"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+/* LOAD REAL STATS */
+
+async function loadStats(){
+
+/* الكتب */
+
+const booksSnapshot =
+await getDocs(collection(db,"books"));
+
+document.getElementById("books-count")
+.innerText =
+booksSnapshot.size;
+
+/* الطلاب */
+
+const studentsSnapshot =
+await getDocs(collection(db,"students"));
+
+document.getElementById("students-count")
+.innerText =
+studentsSnapshot.size;
+
+/* الكتب المستعارة */
+
+const borrowedQuery = query(
+collection(db,"borrows"),
+where("status","==","borrowed")
+);
+
+const borrowedSnapshot =
+await getDocs(borrowedQuery);
+
+document.getElementById("borrowed-count")
+.innerText =
+borrowedSnapshot.size;
+
+/* الكتب المرجعة */
+
+const returnedQuery = query(
+collection(db,"borrows"),
+where("status","==","returned")
+);
+
+const returnedSnapshot =
+await getDocs(returnedQuery);
+
+document.getElementById("returned-count")
+.innerText =
+returnedSnapshot.size;
+
+}
+
+loadStats();
 
 </script>
 </body>
