@@ -11,138 +11,141 @@
     rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Cairo', sans-serif;
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Cairo',sans-serif;
     }
 
-    body {
+    body{
       background:
-        radial-gradient(circle at top right, #0ea5e955, transparent 30%),
-        radial-gradient(circle at bottom left, #9333ea55, transparent 30%),
-        #0f172a;
+      radial-gradient(circle at top right,#0ea5e955,transparent 30%),
+      radial-gradient(circle at bottom left,#9333ea55,transparent 30%),
+      #0f172a;
 
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      color: white;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+      color:white;
     }
 
-    .login-box {
-      width: 90%;
-      max-width: 430px;
-      background: rgba(17, 24, 39, 0.9);
-      padding: 45px;
-      border-radius: 30px;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, .08);
-      backdrop-filter: blur(15px);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, .5);
+    .login-box{
+      width:90%;
+      max-width:430px;
+      background:rgba(17,24,39,.9);
+      padding:45px;
+      border-radius:30px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(15px);
+      box-shadow:0 25px 50px rgba(0,0,0,.5);
 
-      animation: fadeIn 1s ease;
+      animation:fadeIn 1s ease;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
+    @keyframes fadeIn{
+
+      from{
+        opacity:0;
+        transform:translateY(40px);
       }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      to{
+        opacity:1;
+        transform:translateY(0);
       }
     }
 
-    .icon {
-      font-size: 70px;
-      margin-bottom: 15px;
+    .icon{
+      font-size:70px;
+      margin-bottom:15px;
     }
 
-    h1 {
-      color: #38bdf8;
-      margin-bottom: 10px;
-      font-size: 38px;
-      font-weight: 900;
+    h1{
+      color:#38bdf8;
+      margin-bottom:10px;
+      font-size:38px;
+      font-weight:900;
     }
 
-    .subtitle {
-      color: #cbd5e1;
-      margin-bottom: 35px;
-      font-size: 16px;
+    .subtitle{
+      color:#cbd5e1;
+      margin-bottom:35px;
+      font-size:16px;
     }
 
-    .input-box {
-      position: relative;
-      margin-bottom: 20px;
+    .input-box{
+      position:relative;
+      margin-bottom:20px;
     }
 
-    input {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: #1e293b;
-      color: white;
-      font-size: 16px;
-      outline: none;
-      transition: .3s;
+    input{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:#1e293b;
+      color:white;
+      font-size:16px;
+      outline:none;
+      transition:.3s;
     }
 
-    input:focus {
-      border: 1px solid #38bdf8;
-      box-shadow: 0 0 15px rgba(56, 189, 248, .3);
+    input:focus{
+      border:1px solid #38bdf8;
+      box-shadow:0 0 15px rgba(56,189,248,.3);
     }
 
-    button {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: #38bdf8;
-      color: black;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: .4s;
+    button{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:#38bdf8;
+      color:black;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:10px;
+      transition:.4s;
     }
 
-    button:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 25px rgba(56, 189, 248, .4);
+    button:hover{
+      transform:translateY(-4px);
+      box-shadow:0 15px 25px rgba(56,189,248,.4);
     }
 
-    .back {
-      display: inline-block;
-      margin-top: 25px;
-      text-decoration: none;
-      color: #cbd5e1;
-      transition: .3s;
+    .back{
+      display:inline-block;
+      margin-top:25px;
+      text-decoration:none;
+      color:#cbd5e1;
+      transition:.3s;
     }
 
-    .back:hover {
-      color: #38bdf8;
+    .back:hover{
+      color:#38bdf8;
     }
 
-    @media(max-width:768px) {
+    @media(max-width:768px){
 
-      .login-box {
-        padding: 35px 25px;
+      .login-box{
+        padding:35px 25px;
       }
 
-      h1 {
-        font-size: 30px;
+      h1{
+        font-size:30px;
       }
 
-      .icon {
-        font-size: 55px;
+      .icon{
+        font-size:55px;
       }
     }
+
   </style>
 
 </head>
@@ -163,17 +166,35 @@
       قم بتسجيل الدخول لإدارة نظام المكتبة والتحكم الكامل
     </p>
 
-    <div class="input-box">
-      <input type="text" placeholder="اسم المستخدم">
-    </div>
+    <!-- EMAIL -->
 
     <div class="input-box">
-      <input type="password" placeholder="كلمة المرور">
+
+      <input
+      type="email"
+      id="adminEmail"
+      placeholder="الإيميل">
+
     </div>
 
-    <button>
+    <!-- PASSWORD -->
+
+    <div class="input-box">
+
+      <input
+      type="password"
+      id="adminPassword"
+      placeholder="كلمة المرور">
+
+    </div>
+
+    <!-- LOGIN BUTTON -->
+
+    <button onclick="adminLogin()">
       تسجيل الدخول
     </button>
+
+    <!-- BACK -->
 
     <a href="index.html" class="back">
       ← العودة للصفحة الرئيسية
@@ -181,6 +202,121 @@
 
   </div>
 
-</body>
 
+
+  <!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+
+// FIREBASE CONFIG
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCkCR-nUCHQYRiLILTdSzCeYn2CTB94ILQ",
+
+  authDomain: "laib-64c9b.firebaseapp.com",
+
+  projectId: "laib-64c9b",
+
+  storageBucket: "laib-64c9b.firebasestorage.app",
+
+  messagingSenderId: "429556863392",
+
+  appId: "1:429556863392:web:1cffe618fd87b6606914c5"
+};
+
+
+// INITIALIZE FIREBASE
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+// ADMIN LOGIN FUNCTION
+
+window.adminLogin = async function(){
+
+  const email =
+  document.getElementById('adminEmail').value;
+
+  const password =
+  document.getElementById('adminPassword').value;
+
+
+  if(!email || !password){
+
+    alert("يرجى تعبئة جميع الحقول");
+    return;
+  }
+
+  try{
+
+    // تسجيل الدخول
+
+    const userCredential =
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    const user =
+    userCredential.user;
+
+
+    // فحص إذا الحساب Admin
+
+    const adminRef =
+    doc(db , "librarians" , user.uid);
+
+    const adminSnap =
+    await getDoc(adminRef);
+
+
+    if(adminSnap.exists()){
+
+      alert("تم تسجيل دخول أمين المكتبة بنجاح ✅");
+
+      window.location.href =
+      "admin-dashboard.html";
+
+    }else{
+
+      alert("هذا الحساب ليس أمين مكتبة");
+
+    }
+
+  }
+
+  catch(error){
+
+    alert("الإيميل أو كلمة المرور غير صحيحة");
+
+  }
+
+}
+
+</script>
+
+</body>
 </html>
