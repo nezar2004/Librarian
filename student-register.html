@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>إنشاء حساب طالب</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap"
+    rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Cairo',sans-serif;
+    }
+
+    body{
+      background:
+      radial-gradient(circle at top right,#0ea5e955,transparent 30%),
+      radial-gradient(circle at bottom left,#9333ea55,transparent 30%),
+      #0f172a;
+
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:30px;
+      color:white;
+    }
+
+    .register-box{
+      width:100%;
+      max-width:500px;
+      background:rgba(17,24,39,.9);
+      padding:40px;
+      border-radius:30px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(15px);
+      box-shadow:0 25px 50px rgba(0,0,0,.5);
+    }
+
+    h1{
+      color:#38bdf8;
+      margin-bottom:15px;
+      font-size:38px;
+    }
+
+    p{
+      color:#cbd5e1;
+      margin-bottom:30px;
+    }
+
+    input{
+      width:100%;
+      padding:15px;
+      margin:12px 0;
+      border:none;
+      border-radius:12px;
+      background:#1e293b;
+      color:white;
+      font-size:16px;
+      outline:none;
+    }
+
+    input:focus{
+      border:1px solid #38bdf8;
+    }
+
+    button{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:12px;
+      background:#38bdf8;
+      color:black;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:20px;
+      transition:.3s;
+    }
+
+    button:hover{
+      transform:translateY(-4px);
+      box-shadow:0 15px 25px rgba(56,189,248,.4);
+    }
+
+    .message{
+      margin-top:20px;
+      padding:12px;
+      border-radius:10px;
+      display:none;
+      font-weight:bold;
+    }
+
+    .success{
+      background:rgba(34,197,94,.2);
+      color:#22c55e;
+    }
+
+    .error{
+      background:rgba(239,68,68,.2);
+      color:#ef4444;
+    }
+
+    .back{
+      display:inline-block;
+      margin-top:20px;
+      color:#cbd5e1;
+      text-decoration:none;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="register-box">
+
+    <h1>📝 إنشاء حساب</h1>
+
+    <p>
+      قم بإنشاء حساب جديد للوصول إلى نظام المكتبة
+    </p>
+
+    <input type="text" id="name" placeholder="الاسم الكامل">
+
+    <input type="email" id="email" placeholder="الإيميل الجامعي">
+
+    <input type="text" id="studentId" placeholder="رقم الطالب">
+
+    <input type="password" id="password" placeholder="كلمة المرور">
+
+    <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور">
+
+    <button onclick="registerStudent()">
+      إنشاء الحساب
+    </button>
+
+    <div class="message" id="messageBox"></div>
+
+    <a href="student-login.html" class="back">
+      ← العودة لتسجيل الدخول
+    </a>
+
+  </div>
+
+  <script>
+
+    function showMessage(text, type){
+
+      const messageBox =
+      document.getElementById('messageBox');
+
+      messageBox.style.display = 'block';
+      messageBox.innerHTML = text;
+      messageBox.className = 'message ' + type;
+    }
+
+    function registerStudent(){
+
+      const name =
+      document.getElementById('name').value;
+
+      const email =
+      document.getElementById('email').value;
+
+      const studentId =
+      document.getElementById('studentId').value;
+
+      const password =
+      document.getElementById('password').value;
+
+      const confirmPassword =
+      document.getElementById('confirmPassword').value;
+
+      if(!name || !email || !studentId || !password || !confirmPassword){
+
+        showMessage('يرجى تعبئة جميع الحقول','error');
+        return;
+      }
+
+      if(password !== confirmPassword){
+
+        showMessage('كلمتا المرور غير متطابقتين','error');
+        return;
+      }
+
+      let students =
+      JSON.parse(localStorage.getItem('students')) || [];
+
+      const existingUser =
+      students.find(student => student.email === email);
+
+      if(existingUser){
+
+        showMessage('الحساب موجود مسبقاً','error');
+        return;
+      }
+
+      const newStudent = {
+        name,
+        email,
+        studentId,
+        password
+      };
+
+      students.push(newStudent);
+
+      localStorage.setItem(
+        'students',
+        JSON.stringify(students)
+      );
+
+      showMessage('تم إنشاء الحساب بنجاح ✅','success');
+
+      setTimeout(() => {
+
+        window.location.href =
+        'student-login.html';
+
+      },1500);
+    }
+
+  </script>
+
+</body>
+</html>
