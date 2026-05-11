@@ -1,0 +1,1290 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مكتبة الجامعة</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --main:#38bdf8;
+  --main-dark:#0ea5e9;
+  --purple:#9333ea;
+
+  --bg:#0f172a;
+  --bg-light:#111827;
+  --card:#1e293b;
+
+  --text:#ffffff;
+  --text-light:#cbd5e1;
+
+  --border:rgba(255,255,255,.08);
+}
+
+/* ================= BODY ================= */
+
+body{
+background:var(--bg);
+background-image:
+radial-gradient(circle at top right,#0ea5e955,transparent 30%),
+radial-gradient(circle at bottom left,#9333ea55,transparent 30%);
+min-height:100vh;
+display:flex;
+color:var(--text);
+overflow-x:hidden;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+width:260px;
+background:rgba(17,24,39,.95);
+background-image:
+linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+background-size:40px 40px;
+height:100vh;
+position:fixed;
+right:0;
+top:0;
+padding:18px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+border-left:1px solid var(--border);
+backdrop-filter:blur(12px);
+}
+
+.logo-box{
+display:flex;
+align-items:center;
+gap:14px;
+margin-bottom:20px;
+}
+
+.logo-icon{
+width:54px;
+height:54px;
+border-radius:14px;
+background:var(--main);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+color:black;
+}
+
+.logo-text h1{
+color:var(--main);
+font-size:26px;
+font-weight:800;
+}
+
+.logo-text p{
+color:var(--text-light);
+font-size:13px;
+}
+
+.admin-card{
+background:rgba(255,255,255,.03);
+border:1px solid var(--border);
+border-radius:16px;
+padding:20px;
+text-align:center;
+margin-bottom:20px;
+}
+
+.admin-card h3{
+color:var(--main);
+margin-bottom:8px;
+font-size:15px;
+}
+
+.admin-card p{
+color:white;
+font-weight:700;
+}
+
+.menu-title{
+color:#94a3b8;
+font-size:14px;
+margin:16px 10px;
+}
+
+.menu a{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:14px 16px;
+margin-bottom:8px;
+text-decoration:none;
+color:white;
+border-radius:14px;
+transition:.25s;
+font-size:15px;
+}
+
+.menu a:hover,
+.menu a.active{
+background:var(--main);
+color:black;
+}
+
+.menu .icon{
+width:34px;
+height:34px;
+border-radius:10px;
+background:rgba(255,255,255,.05);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:16px;
+}
+
+.logout-btn{
+background:#ef4444;
+color:white;
+padding:16px;
+border-radius:16px;
+text-align:center;
+text-decoration:none;
+font-weight:700;
+transition:.3s;
+border:1px solid var(--border);
+}
+
+.logout-btn:hover{
+background:#dc2626;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+flex:1;
+margin-right:260px;
+padding:28px;
+}
+
+.topbar{
+background:var(--bg-light);
+padding:24px 30px;
+border-radius:0 0 20px 20px;
+margin:-28px -28px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid var(--border);
+}
+
+.page-title h2{
+font-size:42px;
+font-weight:900;
+margin-bottom:5px;
+}
+
+.page-title p{
+color:var(--text-light);
+}
+
+.date{
+color:var(--main);
+font-weight:700;
+}
+
+/* ================= PANELS ================= */
+
+.panel{
+display:none;
+animation:fade .3s ease;
+}
+
+.panel.active{
+display:block;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(10px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+/* ================= CARDS ================= */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:18px;
+margin-bottom:24px;
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:24px;
+padding:28px;
+position:relative;
+overflow:hidden;
+min-height:120px;
+}
+
+.card h3{
+font-size:48px;
+font-weight:900;
+margin-bottom:6px;
+color:var(--main);
+}
+
+.card p{
+color:var(--text-light);
+font-weight:600;
+}
+
+.badge{
+display:inline-block;
+padding:6px 12px;
+border-radius:20px;
+font-size:12px;
+font-weight:700;
+margin-top:10px;
+}
+
+.badge.gold{
+background:#f59e0b22;
+color:#fbbf24;
+}
+
+.badge.green{
+background:#22c55e22;
+color:#22c55e;
+}
+
+.badge.red{
+background:#ef444422;
+color:#ef4444;
+}
+
+/* ================= BOX ================= */
+
+.box{
+background:var(--card);
+border-radius:24px;
+border:1px solid var(--border);
+padding:24px;
+margin-bottom:22px;
+}
+
+.box-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding-bottom:16px;
+border-bottom:1px solid var(--border);
+margin-bottom:18px;
+}
+
+.box-header h3{
+font-size:34px;
+font-weight:800;
+}
+
+/* ================= FORM ================= */
+
+.form-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:18px;
+margin-top:18px;
+}
+
+.input-group label{
+display:block;
+margin-bottom:8px;
+font-size:14px;
+font-weight:700;
+color:var(--text-light);
+}
+
+input,
+select,
+textarea{
+width:100%;
+padding:16px;
+border-radius:14px;
+border:1px solid var(--border);
+background:var(--bg-light);
+font-size:15px;
+outline:none;
+transition:.3s;
+color:white;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+border-color:var(--main);
+background:#0f172a;
+}
+
+textarea{
+height:120px;
+resize:none;
+}
+
+.actions{
+display:flex;
+gap:14px;
+margin-top:24px;
+}
+
+.btn{
+border:none;
+padding:14px 24px;
+border-radius:14px;
+font-size:15px;
+font-weight:800;
+cursor:pointer;
+transition:.3s;
+}
+
+.btn-primary{
+background:var(--main);
+color:black;
+}
+
+.btn-primary:hover{
+background:var(--main-dark);
+}
+
+.btn-secondary{
+background:#334155;
+color:white;
+}
+
+.btn-danger{
+background:#ef4444;
+color:white;
+}
+
+.btn-info{
+background:#0ea5e9;
+color:black;
+}
+
+/* ================= TABLE ================= */
+
+.table-wrap{
+overflow:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+background:var(--bg-light);
+padding:16px;
+color:var(--main);
+font-size:14px;
+}
+
+td{
+padding:18px 14px;
+text-align:center;
+border-bottom:1px solid var(--border);
+font-weight:600;
+background:var(--card);
+color:white;
+}
+
+tr:hover{
+background:#0f172a;
+}
+
+.status{
+padding:6px 14px;
+border-radius:20px;
+font-size:13px;
+font-weight:800;
+display:inline-block;
+}
+
+.status.green{
+background:#22c55e22;
+color:#22c55e;
+}
+
+.status.orange{
+background:#f59e0b22;
+color:#fbbf24;
+}
+
+.status.red{
+background:#ef444422;
+color:#ef4444;
+}
+
+.search{
+margin-bottom:20px;
+position:relative;
+}
+
+.search input{
+padding-right:50px;
+background:var(--bg-light);
+}
+
+.search span{
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+color:var(--main);
+}
+
+.report-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.report-card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:24px;
+padding:40px 20px;
+text-align:center;
+cursor:pointer;
+transition:.3s;
+}
+
+.report-card:hover{
+transform:translateY(-5px);
+border-color:var(--main);
+}
+
+.report-card h3{
+margin:16px 0 10px;
+font-size:30px;
+color:var(--main);
+}
+
+.report-card p{
+color:var(--text-light);
+}
+
+@media(max-width:1100px){
+
+.sidebar{
+width:100%;
+height:auto;
+position:relative;
+}
+
+.main{
+margin-right:0;
+}
+
+body{
+flex-direction:column;
+}
+
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div>
+
+<div class="logo-box">
+<div class="logo-icon">📚</div>
+<div class="logo-text">
+<h1>مكتبة الجامعة</h1>
+<p>لوحة الإدارة</p>
+</div>
+</div>
+
+<div class="admin-card">
+<h3>مدير النظام</h3>
+<p>admin</p>
+</div>
+
+<div class="menu-title">الرئيسية</div>
+
+<div class="menu">
+
+<a href="#" class="active" onclick="openPanel(event,'dashboard')">
+<span>لوحة التحكم</span>
+<div class="icon">🏠</div>
+</a>
+
+<a href="#" onclick="openPanel(event,'add-book')">
+<span>إضافة كتاب جديد</span>
+<div class="icon">➕</div>
+</a>
+
+<a href="#" onclick="openPanel(event,'manage-books')">
+<span>إدارة الكتب</span>
+<div class="icon">📘</div>
+</a>
+
+<a href="#" onclick="openPanel(event,'new-member')">
+<span>تسجيل عضو جديد</span>
+<div class="icon">👤</div>
+</a>
+
+<a href="#" onclick="openPanel(event,'members')">
+<span>قائمة الأعضاء</span>
+<div class="icon">👥</div>
+</a>
+
+<div class="menu-title">العمليات</div>
+
+<a href="#" onclick="openPanel(event,'lend')">
+<span>إعارة كتاب</span>
+<div class="icon">📤</div>
+</a>
+
+<a href="#" onclick="openPanel(event,'return')">
+<span>استلام كتاب</span>
+<div class="icon">📥</div>
+</a>
+
+<a href="#" onclick="openPanel(event,'reports')">
+<span>التقارير</span>
+<div class="icon">📊</div>
+</a>
+
+</div>
+
+</div>
+
+<a href="#" class="logout-btn" onclick="logout()">
+تسجيل الخروج
+</a>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="topbar">
+<div class="page-title">
+<h2 id="pageTitle">لوحة التحكم</h2>
+<p>مرحباً بك في نظام مكتبة الجامعة</p>
+</div>
+<div class="date" id="dateNow"></div>
+</div>
+
+<!-- DASHBOARD -->
+
+<div class="panel active" id="dashboard">
+
+<div class="cards">
+
+<div class="card">
+<h3 id="booksCount">284</h3>
+<p>إجمالي الكتب</p>
+<span class="badge gold">+12 هذا الشهر</span>
+</div>
+
+<div class="card">
+<h3 id="membersCount">156</h3>
+<p>الأعضاء المسجلون</p>
+<span class="badge green">نشط</span>
+</div>
+
+<div class="card">
+<h3 id="borrowCount">43</h3>
+<p>كتب مستعارة</p>
+<span class="badge gold">قيد الاستعارة</span>
+</div>
+
+<div class="card">
+<h3 id="lateCount">7</h3>
+<p>استعارات متأخرة</p>
+<span class="badge red">تحتاج متابعة</span>
+</div>
+
+</div>
+
+<div class="box">
+<div class="box-header">
+<h3>آخر النشاطات</h3>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>الطالب</th>
+<th>الكتاب</th>
+<th>العملية</th>
+<th>التاريخ</th>
+<th>الحالة</th>
+</tr>
+</thead>
+<tbody id="activityTable">
+<tr>
+<td>حمزة أحمد</td>
+<td>الخوارزميات وتحليل البيانات</td>
+<td>استعارة</td>
+<td>11/05/2026</td>
+<td><span class="status orange">مستعار</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- ADD BOOK -->
+
+<div class="panel" id="add-book">
+<div class="box">
+<div class="box-header">
+<h3>إضافة كتاب جديد</h3>
+</div>
+
+<div class="form-grid">
+
+<div class="input-group">
+<label>عنوان الكتاب</label>
+<input type="text" id="bookTitle">
+</div>
+
+<div class="input-group">
+<label>اسم المؤلف</label>
+<input type="text" id="bookAuthor">
+</div>
+
+<div class="input-group">
+<label>الرقم المرجعي ISBN</label>
+<input type="text" id="bookISBN">
+</div>
+
+<div class="input-group">
+<label>التصنيف</label>
+<select id="bookCategory">
+<option>علوم وتقنية</option>
+<option>ذكاء اصطناعي</option>
+<option>قواعد بيانات</option>
+<option>شبكات</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>عدد النسخ</label>
+<input type="number" id="bookCopies" value="1">
+</div>
+
+<div class="input-group">
+<label>سنة النشر</label>
+<input type="number" id="publishYear" value="2024">
+</div>
+
+</div>
+
+<div style="margin-top:20px">
+<label>ملاحظات</label>
+<textarea id="bookNotes"></textarea>
+</div>
+
+<div class="actions">
+<button class="btn btn-primary" onclick="saveBook()">حفظ الكتاب</button>
+<button class="btn btn-secondary" onclick="clearBookForm()">مسح</button>
+</div>
+
+</div>
+</div>
+
+<!-- MANAGE BOOKS -->
+
+<div class="panel" id="manage-books">
+<div class="box">
+<div class="box-header">
+<h3>إدارة الكتب</h3>
+<button class="btn btn-primary" onclick="openPanelDirect('add-book')">إضافة كتاب</button>
+</div>
+
+<div class="search">
+<span>🔍</span>
+<input type="text" placeholder="ابحث عن كتاب..." onkeyup="searchBooks(this.value)">
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>العنوان</th>
+<th>المؤلف</th>
+<th>التصنيف</th>
+<th>النسخ</th>
+<th>المتاح</th>
+<th>الإجراءات</th>
+</tr>
+</thead>
+<tbody id="booksTable"></tbody>
+</table>
+</div>
+
+</div>
+</div>
+
+<!-- NEW MEMBER -->
+
+<div class="panel" id="new-member">
+<div class="box">
+<div class="box-header">
+<h3>تسجيل عضو جديد</h3>
+</div>
+
+<div class="form-grid">
+
+<div class="input-group">
+<label>الاسم الكامل</label>
+<input type="text" id="memberName">
+</div>
+
+<div class="input-group">
+<label>الرقم الجامعي</label>
+<input type="text" id="memberId">
+</div>
+
+<div class="input-group">
+<label>القسم / التخصص</label>
+<input type="text" id="memberDept">
+</div>
+
+<div class="input-group">
+<label>البريد الإلكتروني</label>
+<input type="email" id="memberEmail">
+</div>
+
+<div class="input-group">
+<label>رقم الجوال</label>
+<input type="text" id="memberPhone">
+</div>
+
+<div class="input-group">
+<label>المستوى الدراسي</label>
+<select id="memberLevel">
+<option>المستوى الأول</option>
+<option>المستوى الثاني</option>
+<option>المستوى الثالث</option>
+<option>المستوى الرابع</option>
+</select>
+</div>
+
+</div>
+
+<div class="actions">
+<button class="btn btn-primary" onclick="saveMember()">تسجيل العضو</button>
+<button class="btn btn-secondary" onclick="clearMemberForm()">مسح</button>
+</div>
+
+</div>
+</div>
+
+<!-- MEMBERS -->
+
+<div class="panel" id="members">
+<div class="box">
+<div class="box-header">
+<h3>قائمة الأعضاء</h3>
+</div>
+
+<div class="search">
+<span>🔍</span>
+<input type="text" placeholder="ابحث عن عضو..." onkeyup="searchMembers(this.value)">
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>الرقم</th>
+<th>الاسم</th>
+<th>القسم</th>
+<th>الكتب المستعارة</th>
+<th>الحالة</th>
+<th>الإجراءات</th>
+</tr>
+</thead>
+<tbody id="membersTable"></tbody>
+</table>
+</div>
+
+</div>
+</div>
+
+<!-- LEND -->
+
+<div class="panel" id="lend">
+<div class="box">
+<div class="box-header">
+<h3>إعطاء كتاب لطالب</h3>
+</div>
+
+<div class="form-grid">
+
+<div class="input-group">
+<label>الرقم الجامعي للطالب</label>
+<input type="text" id="lendStudent">
+</div>
+
+<div class="input-group">
+<label>الكتاب</label>
+<select id="lendBook"></select>
+</div>
+
+<div class="input-group">
+<label>تاريخ الاستعارة</label>
+<input type="date" id="lendDate">
+</div>
+
+<div class="input-group">
+<label>تاريخ الإرجاع المتوقع</label>
+<input type="date" id="returnDate">
+</div>
+
+</div>
+
+<div class="actions">
+<button class="btn btn-info" onclick="lendBookNow()">تأكيد الإعارة</button>
+</div>
+
+</div>
+</div>
+
+<!-- RETURN -->
+
+<div class="panel" id="return">
+<div class="box">
+<div class="box-header">
+<h3>استلام كتاب مُرجع</h3>
+</div>
+
+<div class="form-grid">
+
+<div class="input-group">
+<label>رقم الطالب</label>
+<input type="text" id="returnStudent">
+</div>
+
+<div class="input-group">
+<label>اختر الكتاب المرجع</label>
+<select id="returnBook"></select>
+</div>
+
+<div class="input-group">
+<label>تاريخ الاسترداد</label>
+<input type="date" id="returnBookDate">
+</div>
+
+<div class="input-group">
+<label>حالة الكتاب</label>
+<select>
+<option>ممتاز</option>
+<option>جيد</option>
+<option>بحاجة صيانة</option>
+</select>
+</div>
+
+</div>
+
+<div style="margin-top:20px">
+<textarea placeholder="أي ملاحظات على حالة الكتاب..."></textarea>
+</div>
+
+<div class="actions">
+<button class="btn btn-info" onclick="receiveBook()">تأكيد الاستلام</button>
+</div>
+
+</div>
+</div>
+
+<!-- REPORTS -->
+
+<div class="panel" id="reports">
+
+<div class="report-grid">
+
+<div class="report-card" onclick="alert('تم فتح جرد المكتبة')">
+<div style="font-size:55px">📚</div>
+<h3>جرد المكتبة</h3>
+<p>قائمة كاملة بجميع الكتب</p>
+</div>
+
+<div class="report-card" onclick="alert('تم فتح تقرير نشاط الأعضاء')">
+<div style="font-size:55px">👥</div>
+<h3>تقرير نشاط الأعضاء</h3>
+<p>الأعضاء الأكثر استعارة</p>
+</div>
+
+<div class="report-card" onclick="alert('تم فتح الكتب الأكثر استعارة')">
+<div style="font-size:55px">🏆</div>
+<h3>الكتب الأكثر استعارة</h3>
+<p>إحصائيات الكتب</p>
+</div>
+
+<div class="report-card" onclick="alert('تم فتح تقرير التأخيرات')">
+<div style="font-size:55px">⚠️</div>
+<h3>تقرير التأخيرات</h3>
+<p>الكتب المتأخرة</p>
+</div>
+
+<div class="report-card" onclick="alert('تم فتح تقرير الكتب المستعارة')">
+<div style="font-size:55px">📤</div>
+<h3>تقرير الكتب المستعارة</h3>
+<p>كل الكتب المعارة</p>
+</div>
+
+<div class="report-card" onclick="alert('تم فتح التقرير الشهري')">
+<div style="font-size:55px">📅</div>
+<h3>التقرير الشهري</h3>
+<p>ملخص شهري للعمليات</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let books = [
+{
+id:1,
+title:'الخوارزميات وتحليل البيانات',
+author:'د. خالد العمري',
+category:'علوم وتقنية',
+copies:3,
+available:1
+},
+{
+id:2,
+title:'مقدمة في الذكاء الاصطناعي',
+author:'د. ريم السلطان',
+category:'علوم وتقنية',
+copies:2,
+available:2
+}
+];
+
+let members = [
+{
+id:'2024001',
+name:'حمزة أحمد',
+dept:'علوم الحاسب',
+borrowed:2,
+status:'نشط'
+}
+];
+
+function openPanel(e,id){
+
+e.preventDefault();
+
+openPanelDirect(id);
+
+const links=document.querySelectorAll('.menu a');
+links.forEach(link=>link.classList.remove('active'));
+
+e.currentTarget.classList.add('active');
+
+}
+
+function openPanelDirect(id){
+
+document.querySelectorAll('.panel').forEach(panel=>{
+panel.classList.remove('active');
+});
+
+const panel=document.getElementById(id);
+if(panel){
+panel.classList.add('active');
+}
+
+const titles={
+'dashboard':'لوحة التحكم',
+'add-book':'إضافة كتاب جديد',
+'manage-books':'إدارة الكتب',
+'new-member':'تسجيل عضو جديد',
+'members':'قائمة الأعضاء',
+'lend':'إعارة كتاب',
+'return':'استلام كتاب',
+'reports':'التقارير'
+};
+
+document.getElementById('pageTitle').innerText=titles[id];
+
+}
+
+function renderBooks(){
+
+const table=document.getElementById('booksTable');
+table.innerHTML='';
+
+books.forEach((book,index)=>{
+
+const row=`
+<tr>
+<td>${index+1}</td>
+<td>${book.title}</td>
+<td>${book.author}</td>
+<td><span class="status green">${book.category}</span></td>
+<td>${book.copies}</td>
+<td>${book.available}</td>
+<td>
+<button class="btn btn-secondary" onclick="editBook(${book.id})">تعديل</button>
+<button class="btn btn-danger" onclick="deleteBook(${book.id})">حذف</button>
+</td>
+</tr>
+`;
+
+table.innerHTML+=row;
+
+});
+
+fillBookSelects();
+
+}
+
+function renderMembers(){
+
+const table=document.getElementById('membersTable');
+table.innerHTML='';
+
+members.forEach(member=>{
+
+const row=`
+<tr>
+<td>${member.id}</td>
+<td>${member.name}</td>
+<td>${member.dept}</td>
+<td><span class="status orange">${member.borrowed} كتب</span></td>
+<td><span class="status green">${member.status}</span></td>
+<td>
+<button class="btn btn-secondary" onclick="viewMember('${member.name}')">عرض</button>
+<button class="btn btn-danger" onclick="deleteMember('${member.id}')">حذف</button>
+</td>
+</tr>
+`;
+
+table.innerHTML+=row;
+
+});
+
+}
+
+function saveBook(){
+
+const title=document.getElementById('bookTitle').value;
+const author=document.getElementById('bookAuthor').value;
+const category=document.getElementById('bookCategory').value;
+const copies=document.getElementById('bookCopies').value;
+
+if(title==='' || author===''){
+alert('الرجاء تعبئة الحقول المطلوبة');
+return;
+}
+
+books.push({
+id:Date.now(),
+title,
+author,
+category,
+copies,
+available:copies
+});
+
+renderBooks();
+updateCounters();
+clearBookForm();
+alert('تم حفظ الكتاب بنجاح');
+
+}
+
+function clearBookForm(){
+
+document.getElementById('bookTitle').value='';
+document.getElementById('bookAuthor').value='';
+document.getElementById('bookISBN').value='';
+document.getElementById('bookCopies').value='1';
+document.getElementById('bookNotes').value='';
+
+}
+
+function deleteBook(id){
+
+if(confirm('هل تريد حذف الكتاب؟')){
+books=books.filter(book=>book.id!==id);
+renderBooks();
+updateCounters();
+}
+
+}
+
+function editBook(id){
+alert('ميزة التعديل جاهزة ويمكن ربطها بقاعدة بيانات لاحقاً');
+}
+
+function saveMember(){
+
+const name=document.getElementById('memberName').value;
+const id=document.getElementById('memberId').value;
+const dept=document.getElementById('memberDept').value;
+
+if(name==='' || id===''){
+alert('أدخل بيانات العضو');
+return;
+}
+
+members.push({
+id,
+name,
+dept,
+borrowed:0,
+status:'نشط'
+});
+
+renderMembers();
+updateCounters();
+clearMemberForm();
+alert('تم تسجيل العضو');
+
+}
+
+function clearMemberForm(){
+
+document.getElementById('memberName').value='';
+document.getElementById('memberId').value='';
+document.getElementById('memberDept').value='';
+document.getElementById('memberEmail').value='';
+document.getElementById('memberPhone').value='';
+
+}
+
+function deleteMember(id){
+
+if(confirm('حذف العضو؟')){
+members=members.filter(member=>member.id!==id);
+renderMembers();
+updateCounters();
+}
+
+}
+
+function viewMember(name){
+alert('عرض بيانات: '+name);
+}
+
+function fillBookSelects(){
+
+const lend=document.getElementById('lendBook');
+const ret=document.getElementById('returnBook');
+
+lend.innerHTML='';
+ret.innerHTML='';
+
+books.forEach(book=>{
+
+lend.innerHTML+=`<option>${book.title}</option>`;
+ret.innerHTML+=`<option>${book.title}</option>`;
+
+});
+
+}
+
+function lendBookNow(){
+
+const student=document.getElementById('lendStudent').value;
+
+if(student===''){
+alert('أدخل رقم الطالب');
+return;
+}
+
+alert('تمت إعارة الكتاب بنجاح');
+
+}
+
+function receiveBook(){
+alert('تم استلام الكتاب بنجاح');
+}
+
+function searchBooks(value){
+
+const rows=document.querySelectorAll('#booksTable tr');
+
+rows.forEach(row=>{
+
+row.style.display=row.innerText.includes(value)?'':'none';
+
+});
+
+}
+
+function searchMembers(value){
+
+const rows=document.querySelectorAll('#membersTable tr');
+
+rows.forEach(row=>{
+
+row.style.display=row.innerText.includes(value)?'':'none';
+
+});
+
+}
+
+function updateCounters(){
+
+document.getElementById('booksCount').innerText=books.length;
+document.getElementById('membersCount').innerText=members.length;
+
+}
+
+function logout(){
+
+if(confirm('هل تريد تسجيل الخروج؟')){
+window.location.reload();
+}
+
+}
+
+function setDate(){
+
+const today=new Date();
+const days=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const months=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+const text=`${days[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+
+document.getElementById('dateNow').innerText=text;
+
+}
+
+renderBooks();
+renderMembers();
+updateCounters();
+fillBookSelects();
+setDate();
+
+</script>
+
+</body>
+</html>
