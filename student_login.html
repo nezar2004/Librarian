@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,136 +11,148 @@
     rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Cairo', sans-serif;
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Cairo',sans-serif;
     }
 
-    body {
+    body{
       background:
-        radial-gradient(circle at top right, #0ea5e955, transparent 30%),
-        radial-gradient(circle at bottom left, #9333ea55, transparent 30%),
-        #0f172a;
+      radial-gradient(circle at top right,#0ea5e955,transparent 30%),
+      radial-gradient(circle at bottom left,#9333ea55,transparent 30%),
+      #0f172a;
 
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      color: white;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+      color:white;
     }
 
-    .login-box {
-      width: 90%;
-      max-width: 430px;
-      background: rgba(17, 24, 39, 0.9);
-      padding: 45px;
-      border-radius: 30px;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, .08);
-      backdrop-filter: blur(15px);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, .5);
+    .login-box{
+      width:90%;
+      max-width:430px;
+      background:rgba(17,24,39,.9);
+      padding:45px;
+      border-radius:30px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(15px);
+      box-shadow:0 25px 50px rgba(0,0,0,.5);
 
-      animation: fadeIn 1s ease;
+      animation:fadeIn 1s ease;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
+    @keyframes fadeIn{
+
+      from{
+        opacity:0;
+        transform:translateY(40px);
       }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      to{
+        opacity:1;
+        transform:translateY(0);
       }
     }
 
-    .icon {
-      font-size: 70px;
-      margin-bottom: 15px;
+    .icon{
+      font-size:70px;
+      margin-bottom:15px;
     }
 
-    h1 {
-      color: #38bdf8;
-      margin-bottom: 10px;
-      font-size: 38px;
-      font-weight: 900;
+    h1{
+      color:#38bdf8;
+      margin-bottom:10px;
+      font-size:38px;
+      font-weight:900;
     }
 
-    .subtitle {
-      color: #cbd5e1;
-      margin-bottom: 35px;
-      font-size: 16px;
+    .subtitle{
+      color:#cbd5e1;
+      margin-bottom:35px;
+      font-size:16px;
     }
 
-    .input-box {
-      position: relative;
-      margin-bottom: 20px;
+    .input-box{
+      margin-bottom:20px;
     }
 
-    input {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: #1e293b;
-      color: white;
-      font-size: 16px;
-      outline: none;
-      transition: .3s;
+    input{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:#1e293b;
+      color:white;
+      font-size:16px;
+      outline:none;
+      transition:.3s;
     }
 
-    input:focus {
-      border: 1px solid #38bdf8;
-      box-shadow: 0 0 15px rgba(56, 189, 248, .3);
+    input:focus{
+      border:1px solid #38bdf8;
+      box-shadow:0 0 15px rgba(56,189,248,.3);
     }
 
-    button {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: #38bdf8;
-      color: black;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: .4s;
+    button{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:#38bdf8;
+      color:black;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:10px;
+      transition:.4s;
     }
 
-    button:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 25px rgba(56, 189, 248, .4);
+    button:hover{
+      transform:translateY(-4px);
+      box-shadow:0 15px 25px rgba(56,189,248,.4);
     }
 
-    .back {
-      display: inline-block;
-      margin-top: 25px;
-      text-decoration: none;
-      color: #cbd5e1;
-      transition: .3s;
+    .register-btn{
+      background:transparent;
+      border:2px solid #38bdf8;
+      color:white;
     }
 
-    .back:hover {
-      color: #38bdf8;
+    .register-btn:hover{
+      background:#38bdf8;
+      color:black;
     }
 
-    @media(max-width:768px) {
+    .back{
+      display:inline-block;
+      margin-top:25px;
+      text-decoration:none;
+      color:#cbd5e1;
+      transition:.3s;
+    }
 
-      .login-box {
-        padding: 35px 25px;
+    .back:hover{
+      color:#38bdf8;
+    }
+
+    @media(max-width:768px){
+
+      .login-box{
+        padding:35px 25px;
       }
 
-      h1 {
-        font-size: 30px;
+      h1{
+        font-size:30px;
       }
 
-      .icon {
-        font-size: 55px;
+      .icon{
+        font-size:55px;
       }
     }
 
@@ -163,28 +176,133 @@
       قم بتسجيل الدخول للوصول إلى نظام المكتبة
     </p>
 
-    <div class="input-box">
-      <input type="text" placeholder="رقم الطالب">
-    </div>
+    <!-- EMAIL -->
 
     <div class="input-box">
-      <input type="password" placeholder="كلمة المرور">
+
+      <input
+      type="email"
+      id="loginEmail"
+      placeholder="الإيميل الجامعي">
+
     </div>
 
-    <button>
+    <!-- PASSWORD -->
+
+    <div class="input-box">
+
+      <input
+      type="password"
+      id="loginPassword"
+      placeholder="كلمة المرور">
+
+    </div>
+
+    <!-- LOGIN BUTTON -->
+
+    <button onclick="loginStudent()">
       تسجيل الدخول
     </button>
-	<a href="student-register.html">
 
-	  <button class="register-toggle">
-		إنشاء حساب جديد
-	  </button>
+    <!-- REGISTER PAGE -->
 
-	</a>
+    <a href="student-register.html">
+
+      <button class="register-btn">
+        إنشاء حساب جديد
+      </button>
+
+    </a>
+
+    <!-- BACK -->
+
     <a href="index.html" class="back">
       ← العودة للصفحة الرئيسية
     </a>
 
   </div>
+
+
+
+
+
+  <!-- FIREBASE -->
+
+  <script type="module">
+
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+    import {
+      getAuth,
+      signInWithEmailAndPassword
+    }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+
+    // FIREBASE CONFIG
+
+    const firebaseConfig = {
+
+      apiKey: "AIzaSyCkCR-nUCHQYRiLILTdSzCeYn2CTB94ILQ",
+
+      authDomain: "laib-64c9b.firebaseapp.com",
+
+      projectId: "laib-64c9b",
+
+      storageBucket: "laib-64c9b.firebasestorage.app",
+
+      messagingSenderId: "429556863392",
+
+      appId: "1:429556863392:web:1cffe618fd87b6606914c5"
+    };
+
+
+    // INITIALIZE FIREBASE
+
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+
+
+    // LOGIN FUNCTION
+
+    window.loginStudent = async function(){
+
+      const email =
+      document.getElementById('loginEmail').value;
+
+      const password =
+      document.getElementById('loginPassword').value;
+
+
+      if(!email || !password){
+
+        alert("يرجى تعبئة جميع الحقول");
+        return;
+      }
+
+      try{
+
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        alert("تم تسجيل الدخول بنجاح 🎉");
+
+        window.location.href =
+        "student-dashboard.html";
+      }
+
+      catch(error){
+
+        alert("الإيميل أو كلمة المرور غير صحيحة");
+      }
+    }
+
+  </script>
+
 </body>
 </html>
