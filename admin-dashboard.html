@@ -638,7 +638,7 @@ tr:hover{
 <div class="icon">👤</div>
 </a>
 
-<a href="#" onclick="openPanel(event,'members')">
+<a href="#" onclick="openPanel(event,'students')">
 <span>قائمة الأعضاء</span>
 <div class="icon">👥</div>
 </a>
@@ -895,7 +895,7 @@ tr:hover{
 
 <!-- MEMBERS -->
 
-<div class="panel" id="members">
+<div class="panel" id="students">
 <div class="box">
 <div class="box-header">
 <h3>قائمة الأعضاء</h3>
@@ -1013,41 +1013,43 @@ tr:hover{
 
 <!-- REPORTS -->
 
+<!-- REPORTS -->
+
 <div class="panel" id="reports">
 
 <div class="report-grid">
 
-<div class="report-card" onclick="alert('تم فتح جرد المكتبة')">
+<div class="report-card" onclick="showLibraryInventory()">
 <div style="font-size:55px">📚</div>
 <h3>جرد المكتبة</h3>
 <p>قائمة كاملة بجميع الكتب</p>
 </div>
 
-<div class="report-card" onclick="alert('تم فتح تقرير نشاط الأعضاء')">
+<div class="report-card" onclick="showMembersActivity()">
 <div style="font-size:55px">👥</div>
 <h3>تقرير نشاط الأعضاء</h3>
 <p>الأعضاء الأكثر استعارة</p>
 </div>
 
-<div class="report-card" onclick="alert('تم فتح الكتب الأكثر استعارة')">
+<div class="report-card" onclick="showTopBooks()">
 <div style="font-size:55px">🏆</div>
 <h3>الكتب الأكثر استعارة</h3>
 <p>إحصائيات الكتب</p>
 </div>
 
-<div class="report-card" onclick="alert('تم فتح تقرير التأخيرات')">
+<div class="report-card" onclick="showLateBooks()">
 <div style="font-size:55px">⚠️</div>
 <h3>تقرير التأخيرات</h3>
 <p>الكتب المتأخرة</p>
 </div>
 
-<div class="report-card" onclick="alert('تم فتح تقرير الكتب المستعارة')">
+<div class="report-card" onclick="showBorrowedBooks()">
 <div style="font-size:55px">📤</div>
 <h3>تقرير الكتب المستعارة</h3>
 <p>كل الكتب المعارة</p>
 </div>
 
-<div class="report-card" onclick="alert('تم فتح التقرير الشهري')">
+<div class="report-card" onclick="showMonthlyReport()">
 <div style="font-size:55px">📅</div>
 <h3>التقرير الشهري</h3>
 <p>ملخص شهري للعمليات</p>
@@ -1055,61 +1057,96 @@ tr:hover{
 
 </div>
 
+<!-- مكان ظهور التقرير -->
+
+<div class="box" style="margin-top:25px">
+<div class="box-header">
+
+<h3 id="reportTitle">التقارير</h3>
+
+<div style="display:flex; gap:12px;">
+
+<button class="btn btn-secondary"
+onclick="window.print()">
+🖨️ طباعة
+</button>
+
+<button class="btn btn-primary"
+onclick="exportTableToExcel()">
+⬇️ تصدير Excel
+</button>
+
+</div>
+
+</div>
+
+<div class="table-wrap">
+<table>
+<thead id="reportHead"></thead>
+<tbody id="reportBody"></tbody>
+</table>
+</div>
 </div>
 
 </div>
 
-<script>
+<script type="module">
 
-let books = [
-{
-id:1,
-title:'الخوارزميات وتحليل البيانات',
-author:'د. خالد العمري',
-category:'علوم وتقنية',
-copies:3,
-available:1
-},
-{
-id:2,
-title:'مقدمة في الذكاء الاصطناعي',
-author:'د. ريم السلطان',
-category:'علوم وتقنية',
-copies:2,
-available:2
+/* ================= FIREBASE ================= */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+getDocs,
+addDoc,
+deleteDoc,
+doc,
+updateDoc,
+query,
+where
 }
-];
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-let members = [
-{
-id:'2024001',
-name:'حمزة أحمد',
-dept:'علوم الحاسب',
-borrowed:2,
-status:'نشط'
-}
-];
+const firebaseConfig = {
+apiKey: "AIzaSyCkCR-nUCHQYRiLILTdSzCeYn2CTB94ILQ",
+authDomain: "laib-64c9b.firebaseapp.com",
+projectId: "laib-64c9b",
+storageBucket: "laib-64c9b.firebasestorage.app",
+messagingSenderId: "429556863392",
+appId: "1:429556863392:web:1cffe618fd87b6606914c5"
+};
 
-function openPanel(e,id){
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* ================= OPEN PANELS ================= */
+
+window.openPanel = function(e,id){
 
 e.preventDefault();
 
 openPanelDirect(id);
 
 const links=document.querySelectorAll('.menu a');
-links.forEach(link=>link.classList.remove('active'));
+
+links.forEach(link=>{
+link.classList.remove('active');
+});
 
 e.currentTarget.classList.add('active');
 
 }
 
-function openPanelDirect(id){
+window.openPanelDirect = function(id){
 
 document.querySelectorAll('.panel').forEach(panel=>{
 panel.classList.remove('active');
 });
 
 const panel=document.getElementById(id);
+
 if(panel){
 panel.classList.add('active');
 }
@@ -1119,7 +1156,7 @@ const titles={
 'add-book':'إضافة كتاب جديد',
 'manage-books':'إدارة الكتب',
 'new-member':'تسجيل عضو جديد',
-'members':'قائمة الأعضاء',
+'students':'قائمة الأعضاء',
 'lend':'إعارة كتاب',
 'return':'استلام كتاب',
 'reports':'التقارير'
@@ -1129,29 +1166,44 @@ document.getElementById('pageTitle').innerText=titles[id];
 
 }
 
-function renderBooks(){
+/* ================= BOOKS ================= */
+
+async function renderBooks(){
 
 const table=document.getElementById('booksTable');
+
 table.innerHTML='';
 
-books.forEach((book,index)=>{
+const querySnapshot = await getDocs(collection(db,"books"));
+
+let index = 1;
+
+querySnapshot.forEach((docSnap)=>{
+
+const book = docSnap.data();
 
 const row=`
 <tr>
-<td>${index+1}</td>
+<td>${index++}</td>
 <td>${book.title}</td>
 <td>${book.author}</td>
-<td><span class="status green">${book.category}</span></td>
+<td>
+<span class="status green">
+${book.category}
+</span>
+</td>
 <td>${book.copies}</td>
 <td>${book.available}</td>
 <td>
-<button class="btn btn-secondary" onclick="editBook(${book.id})">تعديل</button>
-<button class="btn btn-danger" onclick="deleteBook(${book.id})">حذف</button>
+<button class="btn btn-danger"
+onclick="deleteBook('${docSnap.id}')">
+حذف
+</button>
 </td>
 </tr>
 `;
 
-table.innerHTML+=row;
+table.innerHTML += row;
 
 });
 
@@ -1159,62 +1211,104 @@ fillBookSelects();
 
 }
 
-function renderMembers(){
+/* ================= MEMBERS ================= */
+
+async function renderMembers(){
 
 const table=document.getElementById('membersTable');
+
 table.innerHTML='';
 
-members.forEach(member=>{
+const querySnapshot = await getDocs(collection(db,"students"));
+
+querySnapshot.forEach((docSnap)=>{
+
+const member = docSnap.data();
 
 const row=`
 <tr>
-<td>${member.id}</td>
+<td>${member.studentId}</td>
 <td>${member.name}</td>
 <td>${member.dept}</td>
-<td><span class="status orange">${member.borrowed} كتب</span></td>
-<td><span class="status green">${member.status}</span></td>
 <td>
-<button class="btn btn-secondary" onclick="viewMember('${member.name}')">عرض</button>
-<button class="btn btn-danger" onclick="deleteMember('${member.id}')">حذف</button>
+<span class="status orange">
+${member.borrowed || 0} كتب
+</span>
+</td>
+<td>
+<span class="status green">
+${member.status || 'نشط'}
+</span>
+</td>
+<td>
+<button class="btn btn-danger"
+onclick="deleteMember('${docSnap.id}')">
+حذف
+</button>
 </td>
 </tr>
 `;
 
-table.innerHTML+=row;
+table.innerHTML += row;
 
 });
 
 }
 
-function saveBook(){
+/* ================= SAVE BOOK ================= */
+
+window.saveBook = async function(){
 
 const title=document.getElementById('bookTitle').value;
 const author=document.getElementById('bookAuthor').value;
 const category=document.getElementById('bookCategory').value;
-const copies=document.getElementById('bookCopies').value;
+const copies=parseInt(document.getElementById('bookCopies').value);
 
 if(title==='' || author===''){
-alert('الرجاء تعبئة الحقول المطلوبة');
+alert('الرجاء تعبئة الحقول');
 return;
 }
 
-books.push({
-id:Date.now(),
+await addDoc(collection(db,"books"),{
+
 title,
 author,
 category,
 copies,
-available:copies
+available:copies,
+createdAt:new Date()
+
 });
 
-renderBooks();
-updateCounters();
+alert('تم إضافة الكتاب');
+
 clearBookForm();
-alert('تم حفظ الكتاب بنجاح');
+
+renderBooks();
+
+updateCounters();
 
 }
 
-function clearBookForm(){
+/* ================= DELETE BOOK ================= */
+
+window.deleteBook = async function(id){
+
+if(confirm('هل تريد حذف الكتاب؟')){
+
+await deleteDoc(doc(db,"books",id));
+
+renderBooks();
+
+updateCounters();
+
+}
+
+}
+
+/* ================= CLEAR BOOK FORM ================= */
+
+window.clearBookForm = function(){
 
 document.getElementById('bookTitle').value='';
 document.getElementById('bookAuthor').value='';
@@ -1224,47 +1318,47 @@ document.getElementById('bookNotes').value='';
 
 }
 
-function deleteBook(id){
+/* ================= SAVE MEMBER ================= */
 
-if(confirm('هل تريد حذف الكتاب؟')){
-books=books.filter(book=>book.id!==id);
-renderBooks();
-updateCounters();
-}
-
-}
-
-function editBook(id){
-alert('ميزة التعديل جاهزة ويمكن ربطها بقاعدة بيانات لاحقاً');
-}
-
-function saveMember(){
+window.saveMember = async function(){
 
 const name=document.getElementById('memberName').value;
-const id=document.getElementById('memberId').value;
+const studentId=document.getElementById('memberId').value;
 const dept=document.getElementById('memberDept').value;
+const email=document.getElementById('memberEmail').value;
+const phone=document.getElementById('memberPhone').value;
 
-if(name==='' || id===''){
+if(name==='' || studentId===''){
 alert('أدخل بيانات العضو');
 return;
 }
 
-members.push({
-id,
+await addDoc(collection(db,"students"),{
+
 name,
+studentId,
 dept,
+email,
+phone,
 borrowed:0,
-status:'نشط'
+status:'نشط',
+createdAt:new Date()
+
 });
 
-renderMembers();
-updateCounters();
-clearMemberForm();
 alert('تم تسجيل العضو');
+
+clearMemberForm();
+
+renderMembers();
+
+updateCounters();
 
 }
 
-function clearMemberForm(){
+/* ================= CLEAR MEMBER FORM ================= */
+
+window.clearMemberForm = function(){
 
 document.getElementById('memberName').value='';
 document.getElementById('memberId').value='';
@@ -1274,21 +1368,25 @@ document.getElementById('memberPhone').value='';
 
 }
 
-function deleteMember(id){
+/* ================= DELETE MEMBER ================= */
+
+window.deleteMember = async function(id){
 
 if(confirm('حذف العضو؟')){
-members=members.filter(member=>member.id!==id);
+
+await deleteDoc(doc(db,"students",id));
+
 renderMembers();
+
 updateCounters();
-}
 
 }
 
-function viewMember(name){
-alert('عرض بيانات: '+name);
 }
 
-function fillBookSelects(){
+/* ================= FILL BOOK SELECT ================= */
+
+async function fillBookSelects(){
 
 const lend=document.getElementById('lendBook');
 const ret=document.getElementById('returnBook');
@@ -1296,88 +1394,660 @@ const ret=document.getElementById('returnBook');
 lend.innerHTML='';
 ret.innerHTML='';
 
-books.forEach(book=>{
+const querySnapshot = await getDocs(collection(db,"books"));
 
-lend.innerHTML+=`<option>${book.title}</option>`;
-ret.innerHTML+=`<option>${book.title}</option>`;
+querySnapshot.forEach((docSnap)=>{
+
+const book = docSnap.data();
+
+lend.innerHTML += `
+<option value="${docSnap.id}">
+${book.title}
+</option>
+`;
+
+ret.innerHTML += `
+<option value="${docSnap.id}">
+${book.title}
+</option>
+`;
 
 });
 
 }
 
-function lendBookNow(){
+/* ================= BORROW BOOK ================= */
 
-const student=document.getElementById('lendStudent').value;
+window.lendBookNow = async function(){
 
-if(student===''){
+const studentId=document.getElementById('lendStudent').value;
+const bookId=document.getElementById('lendBook').value;
+const issueDate=document.getElementById('lendDate').value;
+const returnDate=document.getElementById('returnDate').value;
+
+if(studentId===''){
 alert('أدخل رقم الطالب');
 return;
 }
 
-alert('تمت إعارة الكتاب بنجاح');
+const bookRef = doc(db,"books",bookId);
+
+const booksSnapshot = await getDocs(collection(db,"books"));
+
+let selectedBook = null;
+
+booksSnapshot.forEach((b)=>{
+
+if(b.id===bookId){
+selectedBook = {
+id:b.id,
+...b.data()
+};
+}
+
+});
+
+if(selectedBook.available <= 0){
+
+alert('الكتاب غير متوفر');
+
+return;
 
 }
 
-function receiveBook(){
-alert('تم استلام الكتاب بنجاح');
+/* حفظ الإعارة */
+
+await addDoc(collection(db,"borrows"),{
+
+studentId,
+bookId,
+bookTitle:selectedBook.title,
+issueDate,
+returnDate,
+status:'borrowed',
+createdAt:new Date()
+
+});
+
+/* تحديث عدد النسخ */
+
+await updateDoc(bookRef,{
+available:selectedBook.available - 1
+});
+
+/* إضافة نشاط اليوم */
+
+await addDoc(collection(db,"activities"),{
+
+studentId,
+bookTitle:selectedBook.title,
+action:'استعارة',
+status:'مستعار',
+date:new Date().toLocaleDateString('ar-EG'),
+createdAt:new Date()
+
+});
+
+alert('تمت الإعارة بنجاح');
+
+renderBooks();
+
+updateCounters();
+
+loadTodayActivities();
+
 }
 
-function searchBooks(value){
+/* ================= RETURN BOOK ================= */
+
+window.receiveBook = async function(){
+
+const studentId=document.getElementById('returnStudent').value;
+const bookId=document.getElementById('returnBook').value;
+
+const borrowsRef = collection(db,"borrows");
+
+const q = query(
+borrowsRef,
+where("studentId","==",studentId),
+where("bookId","==",bookId),
+where("status","==","borrowed")
+);
+
+const borrowSnapshot = await getDocs(q);
+
+if(borrowSnapshot.empty){
+
+alert('لا يوجد استعارة لهذا الطالب');
+
+return;
+
+}
+
+let borrowDocId='';
+
+borrowSnapshot.forEach((d)=>{
+borrowDocId = d.id;
+});
+
+/* تحديث حالة الإعارة */
+
+await updateDoc(doc(db,"borrows",borrowDocId),{
+status:'returned'
+});
+
+/* زيادة النسخ المتوفرة */
+
+const booksSnapshot = await getDocs(collection(db,"books"));
+
+booksSnapshot.forEach(async(book)=>{
+
+if(book.id===bookId){
+
+const data = book.data();
+
+await updateDoc(doc(db,"books",bookId),{
+available:data.available + 1
+});
+
+}
+
+});
+
+/* حفظ المرتجع */
+
+await addDoc(collection(db,"returns"),{
+
+studentId,
+bookId,
+returnDate:new Date(),
+createdAt:new Date()
+
+});
+
+alert('تم استلام الكتاب');
+
+renderBooks();
+
+updateCounters();
+
+}
+
+/* ================= COUNTERS ================= */
+
+async function updateCounters(){
+
+/* الكتب */
+
+const booksSnapshot = await getDocs(collection(db,"books"));
+
+document.getElementById('booksCount').innerText =
+booksSnapshot.size;
+
+/* الأعضاء */
+
+const membersSnapshot = await getDocs(collection(db,"students"));
+
+document.getElementById('membersCount').innerText =
+membersSnapshot.size;
+
+/* الاستعارات */
+
+const borrowsSnapshot = await getDocs(collection(db,"borrows"));
+
+let borrowCount = 0;
+let lateCount = 0;
+
+borrowsSnapshot.forEach((docSnap)=>{
+
+const borrow = docSnap.data();
+
+if(borrow.status === 'borrowed'){
+
+borrowCount++;
+
+const today = new Date();
+const due = new Date(borrow.returnDate);
+
+if(today > due){
+lateCount++;
+}
+
+}
+
+});
+
+document.getElementById('borrowCount').innerText =
+borrowCount;
+
+document.getElementById('lateCount').innerText =
+lateCount;
+
+}
+
+/* ================= TODAY ACTIVITIES ================= */
+
+async function loadTodayActivities(){
+
+const table=document.getElementById('activityTable');
+
+table.innerHTML='';
+
+const today = new Date().toLocaleDateString('ar-EG');
+
+const snapshot = await getDocs(collection(db,"activities"));
+
+snapshot.forEach((docSnap)=>{
+
+const act = docSnap.data();
+
+if(act.date === today){
+
+const row=`
+<tr>
+<td>${act.studentId}</td>
+<td>${act.bookTitle}</td>
+<td>${act.action}</td>
+<td>${act.date}</td>
+<td>
+<span class="status orange">
+${act.status}
+</span>
+</td>
+</tr>
+`;
+
+table.innerHTML += row;
+
+}
+
+});
+
+}
+
+/* ================= SEARCH ================= */
+
+window.searchBooks = function(value){
 
 const rows=document.querySelectorAll('#booksTable tr');
 
 rows.forEach(row=>{
 
-row.style.display=row.innerText.includes(value)?'':'none';
+row.style.display =
+row.innerText.includes(value)
+? ''
+: 'none';
 
 });
 
 }
 
-function searchMembers(value){
+window.searchMembers = function(value){
 
 const rows=document.querySelectorAll('#membersTable tr');
 
 rows.forEach(row=>{
 
-row.style.display=row.innerText.includes(value)?'':'none';
+row.style.display =
+row.innerText.includes(value)
+? ''
+: 'none';
 
 });
 
 }
 
-function updateCounters(){
+/* ================= LOGOUT ================= */
 
-document.getElementById('booksCount').innerText=books.length;
-document.getElementById('membersCount').innerText=members.length;
-
-}
-
-function logout(event){
+window.logout = function(event){
 
 event.preventDefault();
 
 if(confirm('هل تريد تسجيل الخروج؟')){
+
 window.location.href='admin_login.html';
+
 }
 
 }
+
+/* ================= DATE ================= */
+
 function setDate(){
 
 const today=new Date();
-const days=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-const months=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 
-const text=`${days[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+const days=[
+'الأحد',
+'الإثنين',
+'الثلاثاء',
+'الأربعاء',
+'الخميس',
+'الجمعة',
+'السبت'
+];
+
+const months=[
+'يناير',
+'فبراير',
+'مارس',
+'أبريل',
+'مايو',
+'يونيو',
+'يوليو',
+'أغسطس',
+'سبتمبر',
+'أكتوبر',
+'نوفمبر',
+'ديسمبر'
+];
+
+const text=`
+${days[today.getDay()]}
+${today.getDate()}
+${months[today.getMonth()]}
+${today.getFullYear()}
+`;
 
 document.getElementById('dateNow').innerText=text;
 
 }
+window.showLibraryInventory = async function(){
+
+document.getElementById('reportTitle').innerText =
+'جرد المكتبة';
+
+document.getElementById('reportHead').innerHTML = `
+<tr>
+<th>العنوان</th>
+<th>المؤلف</th>
+<th>التصنيف</th>
+<th>إجمالي النسخ</th>
+<th>المتاح</th>
+</tr>
+`;
+
+const body=document.getElementById('reportBody');
+
+body.innerHTML='';
+
+const snapshot = await getDocs(collection(db,"books"));
+
+snapshot.forEach((docSnap)=>{
+
+const book = docSnap.data();
+
+body.innerHTML += `
+<tr>
+<td>${book.title}</td>
+<td>${book.author}</td>
+<td>${book.category}</td>
+<td>${book.copies}</td>
+<td>${book.available}</td>
+</tr>
+`;
+
+});
+
+}
+window.showMembersActivity = async function(){
+
+document.getElementById('reportTitle').innerText =
+'نشاط الأعضاء';
+
+document.getElementById('reportHead').innerHTML = `
+<tr>
+<th>الرقم</th>
+<th>الاسم</th>
+<th>القسم</th>
+<th>إجمالي الاستعارات</th>
+<th>الحالة</th>
+</tr>
+`;
+
+const body=document.getElementById('reportBody');
+
+body.innerHTML='';
+
+const snapshot = await getDocs(collection(db,"students"));
+
+snapshot.forEach((docSnap)=>{
+
+const member = docSnap.data();
+
+body.innerHTML += `
+<tr>
+<td>${member.studentId}</td>
+<td>${member.name}</td>
+<td>${member.dept}</td>
+<td>${member.borrowed || 0}</td>
+<td>${member.status || 'نشط'}</td>
+</tr>
+`;
+
+});
+
+}
+window.showTopBooks = async function(){
+
+document.getElementById('reportTitle').innerText =
+'الكتب الأكثر استعارة';
+
+document.getElementById('reportHead').innerHTML = `
+<tr>
+<th>الكتاب</th>
+<th>مرات الاستعارة</th>
+</tr>
+`;
+
+const body=document.getElementById('reportBody');
+
+body.innerHTML='';
+
+const snapshot = await getDocs(collection(db,"borrows"));
+
+const booksCount = {};
+
+snapshot.forEach((docSnap)=>{
+
+const borrow = docSnap.data();
+
+if(!booksCount[borrow.bookTitle]){
+booksCount[borrow.bookTitle] = 0;
+}
+
+booksCount[borrow.bookTitle]++;
+
+});
+
+Object.entries(booksCount)
+.sort((a,b)=>b[1]-a[1])
+.forEach((book)=>{
+
+body.innerHTML += `
+<tr>
+<td>${book[0]}</td>
+<td>${book[1]}</td>
+</tr>
+`;
+
+});
+
+}
+window.showLateBooks = async function(){
+
+document.getElementById('reportTitle').innerText =
+'تقرير التأخيرات';
+
+document.getElementById('reportHead').innerHTML = `
+<tr>
+<th>الطالب</th>
+<th>الكتاب</th>
+<th>تاريخ الإرجاع</th>
+<th>الحالة</th>
+</tr>
+`;
+
+const body=document.getElementById('reportBody');
+
+body.innerHTML='';
+
+const snapshot = await getDocs(collection(db,"borrows"));
+
+snapshot.forEach((docSnap)=>{
+
+const borrow = docSnap.data();
+
+const today = new Date();
+
+const due = new Date(borrow.returnDate);
+
+if(today > due && borrow.status === 'borrowed'){
+
+body.innerHTML += `
+<tr>
+<td>${borrow.studentId}</td>
+<td>${borrow.bookTitle}</td>
+<td>${borrow.returnDate}</td>
+<td>متأخر</td>
+</tr>
+`;
+
+}
+
+});
+
+}
+window.showBorrowedBooks = async function(){
+
+document.getElementById('reportTitle').innerText =
+'تقرير الكتب المستعارة';
+
+document.getElementById('reportHead').innerHTML = `
+<tr>
+<th>الطالب</th>
+<th>الكتاب</th>
+<th>تاريخ الاستعارة</th>
+<th>تاريخ الإرجاع</th>
+<th>الحالة</th>
+</tr>
+`;
+
+const body=document.getElementById('reportBody');
+
+body.innerHTML='';
+
+const snapshot = await getDocs(collection(db,"borrows"));
+
+snapshot.forEach((docSnap)=>{
+
+const borrow = docSnap.data();
+
+body.innerHTML += `
+<tr>
+<td>${borrow.studentId}</td>
+<td>${borrow.bookTitle}</td>
+<td>${borrow.issueDate}</td>
+<td>${borrow.returnDate}</td>
+<td>${borrow.status}</td>
+</tr>
+`;
+
+});
+
+}
+window.showMonthlyReport = async function(){
+
+document.getElementById('reportTitle').innerText =
+'التقرير الشهري';
+
+document.getElementById('reportHead').innerHTML = `
+<tr>
+<th>المؤشر</th>
+<th>القيمة</th>
+</tr>
+`;
+
+const body=document.getElementById('reportBody');
+
+body.innerHTML='';
+
+const books = await getDocs(collection(db,"books"));
+const students = await getDocs(collection(db,"students"));
+const borrows = await getDocs(collection(db,"borrows"));
+
+let activeBorrows = 0;
+let lateBooks = 0;
+
+borrows.forEach((docSnap)=>{
+
+const borrow = docSnap.data();
+
+if(borrow.status === 'borrowed'){
+
+activeBorrows++;
+
+if(new Date() > new Date(borrow.returnDate)){
+lateBooks++;
+}
+
+}
+
+});
+
+body.innerHTML += `
+<tr>
+<td>إجمالي الكتب</td>
+<td>${books.size}</td>
+</tr>
+`;
+
+body.innerHTML += `
+<tr>
+<td>الأعضاء المسجلون</td>
+<td>${students.size}</td>
+</tr>
+`;
+
+body.innerHTML += `
+<tr>
+<td>الكتب المستعارة</td>
+<td>${activeBorrows}</td>
+</tr>
+`;
+
+body.innerHTML += `
+<tr>
+<td>الكتب المتأخرة</td>
+<td>${lateBooks}</td>
+</tr>
+`;
+
+}
+window.exportTableToExcel = function(){
+
+let table = document.querySelector("#reportBody").parentElement.parentElement;
+
+let html = table.outerHTML;
+
+let url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+
+let link = document.createElement('a');
+
+link.href = url;
+
+link.download = 'report.xls';
+
+link.click();
+
+}
+/* ================= START ================= */
 
 renderBooks();
 renderMembers();
 updateCounters();
 fillBookSelects();
+loadTodayActivities();
 setDate();
 
 </script>
