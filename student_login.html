@@ -155,6 +155,16 @@
         font-size:55px;
       }
     }
+	.forgot-btn{
+	  background:transparent;
+	  border:1px solid #38bdf8;
+	  color:#38bdf8;
+	}
+
+	.forgot-btn:hover{
+	  background:#38bdf8;
+	  color:black;
+	}
 
   </style>
 
@@ -219,8 +229,11 @@
     <a href="index.html" class="back">
       ← العودة للصفحة الرئيسية
     </a>
-
+	<button class="forgot-btn" onclick="resetPassword()">
+	  نسيت كلمة المرور؟
+	</button>
   </div>
+
 
 
 
@@ -235,7 +248,8 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
   getAuth,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
@@ -352,7 +366,41 @@ window.loginStudent = async function(){
   }
 
 }
+// RESET PASSWORD
 
+window.resetPassword = async function(){
+
+  const email =
+  document.getElementById("loginEmail").value;
+
+  if(!email){
+
+    alert("أدخل الإيميل أولاً");
+    return;
+  }
+
+  try{
+
+    await sendPasswordResetEmail(
+      auth,
+      email
+    );
+
+    alert(
+      "تم إرسال رابط تغيير كلمة المرور إلى الإيميل 📧"
+    );
+
+  }
+
+  catch(error){
+
+    alert(
+      "حدث خطأ، تأكد من الإيميل"
+    );
+
+  }
+
+}
 </script>
 
 </body>
