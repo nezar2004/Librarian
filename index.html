@@ -378,12 +378,48 @@
     </div>
 
     <ul id="mobile-menu">
-      <li><a href="#">الرئيسية</a></li>
-      <li><a href="#">الخدمات</a></li>
-      <li><a href="#">المميزات</a></li>
-      <li><a href="#">التقارير</a></li>
-      <li><a href="#">تواصل</a></li>
-    </ul>
+
+	  <!-- الرئيسية -->
+	  <li>
+		<a href="index.html">
+		  الرئيسية
+		</a>
+	  </li>
+
+	  <!-- الخدمات -->
+	  <li>
+		<a href="#services">
+		  الخدمات
+		</a>
+	  </li>
+
+	  <!-- المميزات -->
+	  <li>
+		<a href="#features">
+		  المميزات
+		</a>
+	  </li>
+
+	  <!-- التقارير -->
+	  <li>
+		<a href="#reports">
+		  التقارير
+		</a>
+	  </li>
+
+	  <!-- التواصل -->
+	  <li>
+		<a href="#contact">
+		  تواصل
+		</a>
+	  </li>
+
+	  <li>
+		  <a href="#" onclick="openYU()">
+			جامعة اليرموك
+		  </a>
+	  </li>
+	</ul>
 
   </nav>
 
@@ -405,13 +441,13 @@
 
       <div class="hero-buttons">
 
-		  <a href="student_login.html">
+		  <a href="student-login.html">
 			<button class="btn btn-primary">
 			  🎓 دخول الطالب
 			</button>
 		  </a>
 
-		  <a href="admin_login.html">
+		  <a href="admin-login.html">
 			<button class="btn btn-secondary">
 			  👨‍💼 دخول أمين المكتبة
 			</button>
@@ -422,45 +458,145 @@
     </div>
 
   </section>
+<!-- SERVICES -->
 
-  <!-- USERS -->
+<section id="services">
 
-  <section>
+  <div class="section-title">
+    <h2>الخدمات</h2>
+    <p>الخدمات التي يقدمها نظام إدارة المكتبة</p>
+  </div>
 
-    <div class="section-title">
-      <h2>أنواع المستخدمين</h2>
-      <p>النظام يدعم الإدارة الكاملة للمكتبة</p>
+  <div class="cards">
+
+    <div class="card">
+      <h3>📚 إدارة الكتب</h3>
+      <ul>
+        <li>إضافة الكتب الجديدة</li>
+        <li>تعديل بيانات الكتب</li>
+        <li>حذف الكتب</li>
+        <li>تنظيم التصنيفات</li>
+      </ul>
     </div>
 
-    <div class="cards">
+    <div class="card">
+      <h3>👥 إدارة الطلاب</h3>
+      <ul>
+        <li>تسجيل أعضاء جدد</li>
+        <li>متابعة حالة العضوية</li>
+        <li>إدارة بيانات الطلاب</li>
+      </ul>
+    </div>
 
-      <div class="card">
-        <h3>👨‍💼 أمين المكتبة</h3>
+    <div class="card">
+      <h3>🔍 البحث الذكي</h3>
+      <ul>
+        <li>البحث باسم الكتاب</li>
+        <li>البحث بالمؤلف</li>
+        <li>البحث باستخدام ISBN</li>
+      </ul>
+    </div>
 
-        <ul>
-          <li>إضافة كتب جديدة</li>
-          <li>تعديل وحذف الكتب</li>
-          <li>تسجيل الأعضاء</li>
-          <li>إعطاء الكتب للطلاب</li>
-          <li>استلام الكتب عند الإرجاع</li>
-          <li>إنشاء التقارير</li>
-        </ul>
-      </div>
+  </div>
 
-      <div class="card">
-        <h3>🎓 العضو / الطالب</h3>
+</section>
+<!-- FEATURES -->
 
-        <ul>
-          <li>البحث عن كتاب</li>
-          <li>معرفة توفر الكتاب</li>
-          <li>استعارة الكتب</li>
-          <li>إرجاع الكتب</li>
-        </ul>
-      </div>
+<section id="features">
+
+  <div class="section-title">
+    <h2>المميزات</h2>
+    <p>أهم مميزات النظام</p>
+  </div>
+
+  <div class="features">
+
+    <div class="feature">
+      <i>⚡</i>
+      <h4>سرعة الأداء</h4>
+      <p>تنفيذ العمليات بسرعة وكفاءة عالية.</p>
+    </div>
+
+    <div class="feature">
+      <i>📱</i>
+      <h4>تصميم متجاوب</h4>
+      <p>يعمل على الكمبيوتر والموبايل والتابلت.</p>
+    </div>
+
+    <div class="feature">
+      <i>🔒</i>
+      <h4>حماية وأمان</h4>
+      <p>تسجيل دخول آمن للطلاب والإدارة.</p>
+    </div>
+
+    <div class="feature">
+      <i>📊</i>
+      <h4>تقارير ذكية</h4>
+      <p>إحصائيات وتقارير دقيقة للمكتبة.</p>
+    </div>
+
+  </div>
+
+</section>
+<!-- REPORTS -->
+
+<section id="reports">
+
+  <div class="section-title">
+    <h2>التقارير</h2>
+    <p>تقارير وإحصائيات النظام</p>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>📚 تقرير الكتب</h3>
+      <ul>
+        <li>عدد الكتب المتوفرة</li>
+        <li>عدد الكتب المستعارة</li>
+        <li>أكثر الكتب طلباً</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>👨‍🎓 تقرير الطلاب</h3>
+      <ul>
+        <li>عدد الأعضاء المسجلين</li>
+        <li>الطلاب الأكثر استعارة</li>
+        <li>متابعة الغرامات</li>
+      </ul>
+    </div>
+
+  </div>
+
+</section>
+<!-- CONTACT -->
+
+<section id="contact">
+
+  <div class="section-title">
+    <h2>تواصل معنا</h2>
+    <p>يمكنكم التواصل معنا عبر الإيميلات الجامعية</p>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>📧 أعضاء الفريق</h3>
+
+      <ul>
+        <li>2022902144@ses.yu.edu.jo</li>
+        <li>2022902182@ses.yu.edu.jo</li>
+        <li>2022902198@ses.yu.edu.jo</li>
+        <li>2022903002@ses.yu.edu.jo</li>
+        <li>2023901055@ses.yu.edu.jo</li>
+      </ul>
 
     </div>
 
-  </section>
+  </div>
+
+</section>
 
   <!-- FEATURES -->
 
@@ -554,15 +690,43 @@
     © 2026 Library Management System | جميع الحقوق محفوظة
   </footer>
 
-  <script>
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
 
-    menuToggle.onclick = () => {
-      mobileMenu.classList.toggle('active');
-    }
-  </script>
+  <!-- عرض موقع الجامعة داخل الصفحة -->
 
+<div id="yuFrame" style="display:none; width:100%; height:100vh; margin-top:90px;">
+  <iframe 
+    src="https://www.yu.edu.jo"
+    width="100%"
+    height="100%"
+    style="border:none;">
+  </iframe>
+</div>
+
+<script>
+
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuToggle.onclick = () => {
+    mobileMenu.classList.toggle('active');
+  }
+
+  function openYU() {
+
+    // اخفاء كل محتوى الصفحة
+    document.querySelector('.hero').style.display = 'none';
+
+    document.querySelectorAll('section').forEach(sec => {
+      sec.style.display = 'none';
+    });
+
+    document.querySelector('footer').style.display = 'none';
+
+    // اظهار موقع الجامعة
+    document.getElementById('yuFrame').style.display = 'block';
+  }
+
+</script>
 </body>
 
 </html>
