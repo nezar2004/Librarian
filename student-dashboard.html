@@ -9,6 +9,21 @@
 
 <style>
 
+:root{
+  --main:#38bdf8;
+  --main-dark:#0ea5e9;
+  --purple:#9333ea;
+
+  --bg:#0f172a;
+  --bg-light:#111827;
+  --card:#1e293b;
+
+  --text:#ffffff;
+  --text-light:#cbd5e1;
+
+  --border:rgba(255,255,255,.08);
+}
+
 *{
   margin:0;
   padding:0;
@@ -17,15 +32,15 @@
 }
 
 body{
-  background:
+  background:var(--bg);
+  background-image:
   radial-gradient(circle at top right,#0ea5e955,transparent 30%),
-  radial-gradient(circle at bottom left,#9333ea55,transparent 30%),
-  #0f172a;
+  radial-gradient(circle at bottom left,#9333ea55,transparent 30%);
 
   display:flex;
   min-height:100vh;
   overflow-x:hidden;
-  color:white;
+  color:var(--text);
 }
 
 /* SIDEBAR */
@@ -33,6 +48,11 @@ body{
 .sidebar{
   width:300px;
   background:rgba(17,24,39,.95);
+  background-image:
+  linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:40px 40px;
+
   padding:25px;
   display:flex;
   flex-direction:column;
@@ -41,7 +61,7 @@ body{
   right:0;
   top:0;
   height:100%;
-  border-left:1px solid rgba(255,255,255,.08);
+  border-left:1px solid var(--border);
   backdrop-filter:blur(12px);
 }
 
@@ -53,19 +73,19 @@ body{
 }
 
 .logo h2{
-  color:#38bdf8;
+  color:var(--main);
   font-size:28px;
   font-weight:900;
 }
 
 .logo p{
-  color:#cbd5e1;
+  color:var(--text-light);
 }
 
 .logo-icon{
   width:55px;
   height:55px;
-  background:#38bdf8;
+  background:var(--main);
   border-radius:18px;
   display:flex;
   align-items:center;
@@ -75,20 +95,22 @@ body{
 }
 
 .student-card{
-  background:#1e293b;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
   padding:20px;
   border-radius:18px;
   margin-bottom:30px;
 }
 
 .student-card h3{
-  color:#38bdf8;
+  color:var(--main);
   margin-bottom:10px;
 }
 
 .student-card p{
   font-size:20px;
   font-weight:700;
+  color:white;
 }
 
 .menu-title{
@@ -117,14 +139,14 @@ body{
 
 .menu a:hover,
 .menu .active{
-  background:#38bdf8;
+  background:var(--main);
   color:black;
 }
 
 .menu span{
   width:36px;
   height:36px;
-  background:#0f172a;
+  background:rgba(255,255,255,.05);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -167,14 +189,14 @@ body{
 }
 
 .topbar p{
-  color:#cbd5e1;
+  color:var(--text-light);
 }
 
 .borrowed-box{
-  background:#1e293b;
+  background:var(--card);
   padding:10px 18px;
   border-radius:20px;
-  color:#38bdf8;
+  color:var(--main);
 }
 
 /* الصفحات */
@@ -190,10 +212,10 @@ body{
 /* الصناديق */
 
 .box{
-  background:rgba(17,24,39,.9);
+  background:var(--card);
   padding:30px;
   border-radius:30px;
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid var(--border);
   backdrop-filter:blur(12px);
 }
 
@@ -209,15 +231,16 @@ body{
   padding:18px;
   border:none;
   border-radius:16px;
-  background:#1e293b;
+  background:var(--bg-light);
   color:white;
   font-size:16px;
   margin-bottom:20px;
   outline:none;
+  border:1px solid var(--border);
 }
 
 .search-input:focus{
-  border:1px solid #38bdf8;
+  border:1px solid var(--main);
 }
 
 /* التصنيفات */
@@ -233,14 +256,14 @@ body{
   padding:10px 18px;
   border:none;
   border-radius:12px;
-  background:#1e293b;
+  background:var(--bg-light);
   color:white;
   cursor:pointer;
   transition:.3s;
 }
 
 .categories button:hover{
-  background:#38bdf8;
+  background:var(--main);
   color:black;
 }
 
@@ -253,7 +276,8 @@ body{
 }
 
 .book-card{
-  background:#111827;
+  background:var(--bg-light);
+  border:1px solid var(--border);
   border-radius:24px;
   overflow:hidden;
   cursor:pointer;
@@ -289,7 +313,7 @@ body{
 }
 
 .author{
-  color:#cbd5e1;
+  color:var(--text-light);
   margin-bottom:15px;
 }
 
@@ -310,16 +334,17 @@ body{
 }
 
 .table th{
-  background:#1e293b;
-  color:#38bdf8;
+  background:var(--bg-light);
+  color:var(--main);
   padding:15px;
 }
 
 .table td{
-  background:#111827;
+  background:var(--card);
   padding:15px;
   text-align:center;
-  border-bottom:1px solid rgba(255,255,255,.05);
+  border-bottom:1px solid var(--border);
+  color:white;
 }
 
 /* textarea */
@@ -327,8 +352,8 @@ body{
 textarea{
   width:100%;
   min-height:140px;
-  background:#1e293b;
-  border:none;
+  background:var(--bg-light);
+  border:1px solid var(--border);
   border-radius:18px;
   padding:18px;
   color:white;
@@ -344,7 +369,7 @@ textarea{
   padding:12px 20px;
   border:none;
   border-radius:12px;
-  background:#38bdf8;
+  background:var(--main);
   color:black;
   font-weight:700;
   cursor:pointer;
@@ -359,7 +384,7 @@ textarea{
 
 .confirm-btn:hover,
 .return-btn:hover{
-  background:#0ea5e9;
+  background:var(--main-dark);
 }
 
 /* responsive */
@@ -381,7 +406,6 @@ textarea{
     margin-right:0;
   }
 }
-
 </style>
 </head>
 <body>
@@ -470,7 +494,10 @@ textarea{
 <div class="topbar">
 
 <div>
-<h1 id="page-title">البحث عن كتاب</h1>
+
+<h1 id="page-title">
+البحث عن كتاب
+</h1>
 
 <p id="welcome-text">
 مرحباً بك
@@ -478,8 +505,8 @@ textarea{
 
 </div>
 
-<div class="borrowed-box">
-2 كتب مستعارة
+<div class="borrowed-box" id="borrowed-count">
+0 كتب مستعارة
 </div>
 
 </div>
@@ -490,45 +517,28 @@ textarea{
 
 <div class="box">
 
-<div class="search-title">🔎 البحث في المكتبة</div>
+<div class="search-title">
+🔎 البحث في المكتبة
+</div>
 
 <input type="text"
 class="search-input"
+id="search-input"
 placeholder="اكتب عنوان الكتاب...">
 
 <div class="categories">
+
 <button>الكل</button>
 <button>علوم وتقنية</button>
 <button>أدب</button>
 <button>تاريخ</button>
 <button>رياضيات</button>
-</div>
-
-<div class="books">
-
-<div class="book-card">
-
-<div class="book-image book1">🤖</div>
-
-<div class="book-content">
-<h3>مقدمة في الذكاء الاصطناعي</h3>
-<div class="author">د. ريم السلطان</div>
-<div class="status">متوفر (2)</div>
-</div>
 
 </div>
 
-<div class="book-card">
+<!-- الكتب الحقيقية -->
 
-<div class="book-image book2">💻</div>
-
-<div class="book-content">
-<h3>الخوارزميات وتحليل البيانات</h3>
-<div class="author">د. خالد المصري</div>
-<div class="status">متوفر (1)</div>
-</div>
-
-</div>
+<div class="books" id="books-container">
 
 </div>
 
@@ -542,29 +552,13 @@ placeholder="اكتب عنوان الكتاب...">
 
 <div class="box">
 
-<div class="search-title">📚 تصفح الكتب المتاحة</div>
-
-<div class="books">
-
-<div class="book-card">
-<div class="book-image book1">🤖</div>
-
-<div class="book-content">
-<h3>مقدمة في الذكاء الاصطناعي</h3>
-<div class="author">د. ريم السلطان</div>
-<div class="status">متوفر (2)</div>
-</div>
+<div class="search-title">
+📚 تصفح الكتب المتاحة
 </div>
 
-<div class="book-card">
-<div class="book-image book2">💻</div>
+<!-- الكتب الحقيقية -->
 
-<div class="book-content">
-<h3>الخوارزميات وتحليل البيانات</h3>
-<div class="author">د. خالد المصري</div>
-<div class="status">متوفر (1)</div>
-</div>
-</div>
+<div class="books" id="browse-container">
 
 </div>
 
@@ -578,32 +572,17 @@ placeholder="اكتب عنوان الكتاب...">
 
 <div class="box">
 
-<div class="search-title">📁 كتبي المستعارة حالياً</div>
+<div class="search-title">
+📁 كتبي المستعارة حالياً
+</div>
 
-<table class="table">
+<table class="table" id="borrowed-table">
 
 <tr>
 <th>الكتاب</th>
-<th>المؤلف</th>
 <th>تاريخ الاستعارة</th>
 <th>الحالة</th>
 <th>إجراء</th>
-</tr>
-
-<tr>
-<td>الخوارزميات وتحليل البيانات</td>
-<td>د. خالد المصري</td>
-<td>01/05/2026</td>
-<td>غير منتهية</td>
-<td><button class="return-btn">إرجاع</button></td>
-</tr>
-
-<tr>
-<td>أساسيات قواعد البيانات</td>
-<td>د. سلمى</td>
-<td>25/04/2026</td>
-<td>متأخر</td>
-<td><button class="return-btn">إرجاع</button></td>
 </tr>
 
 </table>
@@ -612,23 +591,30 @@ placeholder="اكتب عنوان الكتاب...">
 
 </div>
 
-<!-- ارجاع كتاب -->
+<!-- إرجاع كتاب -->
 
 <div class="page" id="return-page">
 
 <div class="box">
 
-<div class="search-title">📘 إرجاع كتاب</div>
+<div class="search-title">
+📘 إرجاع كتاب
+</div>
 
-<select class="search-input">
-<option>الخوارزميات وتحليل البيانات</option>
-<option>أساسيات قواعد البيانات</option>
+<select class="search-input" id="return-select">
+
+<option>
+اختر الكتاب
+</option>
+
 </select>
 
 <textarea placeholder="أي ملاحظات تريد إبلاغ المكتبة بها..."></textarea>
 
-<button class="confirm-btn">
+<button class="confirm-btn" id="confirm-return">
+
 تأكيد الإرجاع
+
 </button>
 
 </div>
@@ -641,36 +627,17 @@ placeholder="اكتب عنوان الكتاب...">
 
 <div class="box">
 
-<div class="search-title">⏱️ سجل استعاراتي</div>
+<div class="search-title">
+⏱️ سجل استعاراتي
+</div>
 
-<table class="table">
+<table class="table" id="history-table">
 
 <tr>
 <th>الكتاب</th>
 <th>تاريخ الاستعارة</th>
 <th>تاريخ الإرجاع</th>
 <th>الحالة</th>
-</tr>
-
-<tr>
-<td>مقدمة في الذكاء الاصطناعي</td>
-<td>01/03/2026</td>
-<td>15/03/2026</td>
-<td>تم الإرجاع</td>
-</tr>
-
-<tr>
-<td>الشبكات والأمن المعلوماتي</td>
-<td>10/02/2026</td>
-<td>24/02/2026</td>
-<td>تم الإرجاع</td>
-</tr>
-
-<tr>
-<td>الخوارزميات وتحليل البيانات</td>
-<td>01/05/2026</td>
-<td>—</td>
-<td>مستعار</td>
 </tr>
 
 </table>
@@ -680,15 +647,52 @@ placeholder="اكتب عنوان الكتاب...">
 </div>
 
 </main>
+<script type="module">
 
-<script>
+/* ================= FIREBASE ================= */
 
-// جلب بيانات الطالب من localStorage
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-const studentName = localStorage.getItem("studentName");
-const studentId = localStorage.getItem("studentId");
+import {
+getFirestore,
+collection,
+getDocs,
+query,
+where,
+updateDoc,
+doc,
+addDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// عرض البيانات
+const firebaseConfig = {
+
+apiKey: "AIzaSyCkCR-nUCHQYRiLILTdSzCeYn2CTB94ILQ",
+
+authDomain: "laib-64c9b.firebaseapp.com",
+
+projectId: "laib-64c9b",
+
+storageBucket: "laib-64c9b.firebasestorage.app",
+
+messagingSenderId: "429556863392",
+
+appId: "1:429556863392:web:1cffe618fd87b6606914c5"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+/* ================= STUDENT ================= */
+
+const studentName =
+localStorage.getItem("studentName");
+
+const studentId =
+localStorage.getItem("studentId");
 
 if(studentName && studentId){
 
@@ -696,7 +700,7 @@ document.getElementById("student-info").innerText =
 studentName + " — " + studentId;
 
 document.getElementById("welcome-text").innerText =
-"مرحباً " + studentName + " إليك كتبك المستعارة حالياً";
+"مرحباً " + studentName;
 
 }else{
 
@@ -705,127 +709,387 @@ document.getElementById("student-info").innerText =
 
 }
 
-// التنقل بين الصفحات
+/* ================= NAVIGATION ================= */
 
-const navButtons = document.querySelectorAll('.nav-btn');
-const pages = document.querySelectorAll('.page');
-const pageTitle = document.getElementById('page-title');
+const navButtons =
+document.querySelectorAll('.nav-btn');
 
-navButtons.forEach(button => {
+const pages =
+document.querySelectorAll('.page');
 
-button.addEventListener('click', function(e){
+const pageTitle =
+document.getElementById('page-title');
+
+navButtons.forEach(button=>{
+
+button.addEventListener('click',function(e){
 
 e.preventDefault();
 
-navButtons.forEach(btn => {
+navButtons.forEach(btn=>{
 btn.classList.remove('active');
 });
 
 this.classList.add('active');
 
-const pageId = this.dataset.page;
+const pageId=this.dataset.page;
 
-pages.forEach(page => {
+pages.forEach(page=>{
 page.classList.remove('active');
 });
 
-document.getElementById(pageId).classList.add('active');
+document.getElementById(pageId)
+.classList.add('active');
 
-pageTitle.innerText = this.innerText;
+pageTitle.innerText =
+this.innerText;
 
 });
 
 });
 
-// البحث عن الكتب
+/* ================= LOAD BOOKS ================= */
 
-const searchInput = document.querySelector('.search-input');
+async function loadBooks(){
 
-searchInput.addEventListener('keyup', function(){
+const booksContainer =
+document.getElementById("books-container");
 
-const value = this.value.toLowerCase();
+const browseContainer =
+document.getElementById("browse-container");
 
-const books = document.querySelectorAll('.book-card');
+booksContainer.innerHTML='';
+browseContainer.innerHTML='';
 
-books.forEach(book => {
+const snapshot =
+await getDocs(collection(db,"books"));
+
+snapshot.forEach((docSnap)=>{
+
+const book = docSnap.data();
+
+const card = `
+
+<div class="book-card">
+
+<div class="book-image book1">
+📘
+</div>
+
+<div class="book-content">
+
+<h3>${book.title}</h3>
+
+<div class="author">
+${book.author}
+</div>
+
+<div class="status">
+متوفر (${book.available})
+</div>
+
+</div>
+
+</div>
+
+`;
+
+booksContainer.innerHTML += card;
+
+browseContainer.innerHTML += card;
+
+});
+
+}
+
+/* ================= SEARCH ================= */
+
+const searchInput =
+document.getElementById("search-input");
+
+searchInput.addEventListener('keyup',function(){
+
+const value =
+this.value.toLowerCase();
+
+const books =
+document.querySelectorAll('.book-card');
+
+books.forEach(book=>{
 
 const title =
-book.querySelector('h3').innerText.toLowerCase();
+book.querySelector('h3')
+.innerText
+.toLowerCase();
 
-if(title.includes(value)){
+book.style.display =
+title.includes(value)
+? 'block'
+: 'none';
 
-book.style.display = 'block';
+});
 
-}else{
+});
 
-book.style.display = 'none';
+/* ================= BORROWED BOOKS ================= */
+
+async function loadBorrowedBooks(){
+
+const table =
+document.getElementById("borrowed-table");
+
+const returnSelect =
+document.getElementById("return-select");
+
+table.innerHTML = `
+
+<tr>
+<th>الكتاب</th>
+<th>تاريخ الاستعارة</th>
+<th>الحالة</th>
+<th>إجراء</th>
+</tr>
+
+`;
+
+returnSelect.innerHTML='';
+
+const q = query(
+collection(db,"borrows"),
+where("studentId","==",studentId),
+where("status","==","borrowed")
+);
+
+const snapshot =
+await getDocs(q);
+
+let count = 0;
+
+snapshot.forEach((docSnap)=>{
+
+count++;
+
+const borrow = docSnap.data();
+
+table.innerHTML += `
+
+<tr>
+
+<td>${borrow.bookTitle}</td>
+
+<td>${borrow.borrowDate}</td>
+
+<td>مستعار</td>
+
+<td>
+
+<button
+class="return-btn"
+onclick="selectReturnBook('${borrow.bookId}')">
+
+إرجاع
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+returnSelect.innerHTML += `
+
+<option value="${borrow.bookId}">
+${borrow.bookTitle}
+</option>
+
+`;
+
+});
+
+document.getElementById("borrowed-count")
+.innerText =
+count + " كتب مستعارة";
+
+}
+
+/* ================= HISTORY ================= */
+
+/* ================= HISTORY ================= */
+
+async function loadHistory(){
+
+const table =
+document.getElementById("history-table");
+
+table.innerHTML = `
+
+<tr>
+<th>الكتاب</th>
+<th>تاريخ الاستعارة</th>
+<th>تاريخ الإرجاع</th>
+<th>الحالة</th>
+</tr>
+
+`;
+
+const q = query(
+collection(db,"borrows"),
+where("studentId","==",studentId)
+);
+
+const snapshot =
+await getDocs(q);
+
+snapshot.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+table.innerHTML += `
+
+<tr>
+
+<td>${data.bookTitle}</td>
+
+<td>${data.borrowDate || '-'}</td>
+
+<td>${data.returnDate || 'لم يتم الإرجاع بعد'}</td>
+
+<td>
+${data.returned ? 'تم الإرجاع' : 'مستعار'}
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+/* ================= SELECT RETURN ================= */
+
+window.selectReturnBook = function(bookId){
+
+document.getElementById("return-page")
+.classList.add("active");
+
+pages.forEach(page=>{
+
+if(page.id !== "return-page"){
+
+page.classList.remove("active");
 
 }
 
 });
 
+document.getElementById("return-select")
+.value = bookId;
+
+}
+
+/* ================= RETURN BOOK ================= */
+
+document.getElementById("confirm-return")
+.addEventListener("click",async()=>{
+
+const bookId =
+document.getElementById("return-select").value;
+
+if(bookId===''){
+
+alert("اختر كتاب");
+
+return;
+
+}
+
+const q = query(
+collection(db,"borrows"),
+where("studentId","==",studentId),
+where("bookId","==",bookId),
+where("status","==","borrowed")
+);
+
+const snapshot =
+await getDocs(q);
+
+if(snapshot.empty){
+
+alert("لا يوجد كتاب");
+
+return;
+
+}
+
+snapshot.forEach(async(d)=>{
+
+await updateDoc(doc(db,"borrows",d.id),{
+
+status:"returned",
+returned:true,
+returnDate:new Date().toISOString().split('T')[0]
+
 });
 
-// فتح الكتاب
+});
 
-const bookCards = document.querySelectorAll('.book-card');
+/* تحديث عدد النسخ */
 
-bookCards.forEach(card => {
+const booksSnapshot =
+await getDocs(collection(db,"books"));
 
-card.addEventListener('click', () => {
+booksSnapshot.forEach(async(book)=>{
 
-const bookName =
-card.querySelector('h3').innerText;
+if(book.id===bookId){
 
-alert('تم فتح الكتاب: ' + bookName);
+const data = book.data();
+
+await updateDoc(
+doc(db,"books",bookId),
+{
+available:data.available + 1
+}
+);
+
+}
 
 });
 
-});
+/* إضافة سجل */
 
-// التصنيفات
+await addDoc(collection(db,"returns"),{
 
-const categoryButtons =
-document.querySelectorAll('.categories button');
-
-categoryButtons.forEach(button => {
-
-button.addEventListener('click', () => {
-
-alert('تم اختيار تصنيف: ' + button.innerText);
+studentId,
+bookId,
+date:new Date()
 
 });
 
-});
+alert("تم إرجاع الكتاب");
 
-// أزرار الإرجاع
+loadBorrowedBooks();
 
-const returnBtns =
-document.querySelectorAll('.return-btn');
+loadHistory();
 
-returnBtns.forEach(btn => {
-
-btn.addEventListener('click', () => {
-
-alert('تم تحويلك إلى صفحة إرجاع الكتاب');
+loadBooks();
 
 });
 
-});
+/* ================= LOGOUT ================= */
 
-// تسجيل الخروج
-
-const logoutBtn =
-document.querySelector('.logout');
-
-logoutBtn.addEventListener('click', () => {
+document.querySelector('.logout')
+.addEventListener('click',()=>{
 
 const confirmLogout =
 confirm('هل تريد تسجيل الخروج؟');
 
 if(confirmLogout){
 
-localStorage.removeItem("name");
+localStorage.removeItem("studentName");
+
+localStorage.removeItem("studentId");
 
 window.location.href =
 'student_login.html';
@@ -833,6 +1097,14 @@ window.location.href =
 }
 
 });
+
+/* ================= START ================= */
+
+loadBooks();
+
+loadBorrowedBooks();
+
+loadHistory();
 
 </script>
 </body>
