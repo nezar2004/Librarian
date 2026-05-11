@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -156,7 +157,9 @@
     }
 
   </style>
+
 </head>
+
 <body>
 
   <div class="login-box">
@@ -225,79 +228,132 @@
 
   <!-- FIREBASE -->
 
-  <script type="module">
+<script type="module">
 
-    import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-    import {
-      getAuth,
-      signInWithEmailAndPassword
+import {
+  getAuth,
+  signInWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+
+// FIREBASE CONFIG
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCkCR-nUCHQYRiLILTdSzCeYn2CTB94ILQ",
+
+  authDomain: "laib-64c9b.firebaseapp.com",
+
+  projectId: "laib-64c9b",
+
+  storageBucket: "laib-64c9b.firebasestorage.app",
+
+  messagingSenderId: "429556863392",
+
+  appId: "1:429556863392:web:1cffe618fd87b6606914c5"
+};
+
+
+// INITIALIZE FIREBASE
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+// LOGIN FUNCTION
+
+window.loginStudent = async function(){
+
+  const email =
+  document.getElementById('loginEmail').value;
+
+  const password =
+  document.getElementById('loginPassword').value;
+
+
+  if(!email || !password){
+
+    alert("يرجى تعبئة جميع الحقول");
+    return;
+  }
+
+  try{
+
+    // تسجيل الدخول
+
+    const userCredential =
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    const user =
+    userCredential.user;
+
+
+    // جلب بيانات الطالب من Firestore
+
+    const studentRef =
+    doc(db , "students" , user.uid);
+
+    const studentSnap =
+    await getDoc(studentRef);
+
+
+    if(studentSnap.exists()){
+
+      const studentData =
+      studentSnap.data();
+
+      // تخزين البيانات
+
+      localStorage.setItem(
+        "studentName",
+        studentData.name
+      );
+
+      localStorage.setItem(
+        "studentId",
+        studentData.studentId
+      );
+
     }
-    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 
-    // FIREBASE CONFIG
-
-    const firebaseConfig = {
-
-      apiKey: "AIzaSyCkCR-nUCHQYRiLILTdSzCeYn2CTB94ILQ",
-
-      authDomain: "laib-64c9b.firebaseapp.com",
-
-      projectId: "laib-64c9b",
-
-      storageBucket: "laib-64c9b.firebasestorage.app",
-
-      messagingSenderId: "429556863392",
-
-      appId: "1:429556863392:web:1cffe618fd87b6606914c5"
-    };
+    alert("تم تسجيل الدخول بنجاح 🎉");
 
 
-    // INITIALIZE FIREBASE
+    // التحويل للبوابة
 
-    const app = initializeApp(firebaseConfig);
+    window.location.href =
+    "student-dashboard.html";
 
-    const auth = getAuth(app);
+  }
 
+  catch(error){
 
-    // LOGIN FUNCTION
+    alert("الإيميل أو كلمة المرور غير صحيحة");
 
-    window.loginStudent = async function(){
+  }
 
-      const email =
-      document.getElementById('loginEmail').value;
+}
 
-      const password =
-      document.getElementById('loginPassword').value;
+</script>
 
-
-      if(!email || !password){
-
-        alert("يرجى تعبئة جميع الحقول");
-        return;
-      }
-
-      try{
-
-        await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-
-        alert("تم تسجيل الدخول بنجاح 🎉");
-
-        window.location.href =
-        "student-dashboard.html";
-      }
-
-      catch(error){
-
-        alert("الإيميل أو كلمة المرور غير صحيحة");
-      }
-    }
-  </script>
 </body>
 </html>
