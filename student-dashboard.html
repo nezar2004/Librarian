@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة الطالب</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Cairo',sans-serif;
+}
+
+body{
+  background:
+  radial-gradient(circle at top right,#0ea5e955,transparent 30%),
+  radial-gradient(circle at bottom left,#9333ea55,transparent 30%),
+  #0f172a;
+
+  display:flex;
+  min-height:100vh;
+  overflow-x:hidden;
+  color:white;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+  width:300px;
+  background:rgba(17,24,39,.95);
+  padding:25px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:fixed;
+  right:0;
+  top:0;
+  height:100%;
+  border-left:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(12px);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:30px;
+}
+
+.logo h2{
+  color:#38bdf8;
+  font-size:28px;
+  font-weight:900;
+}
+
+.logo p{
+  color:#cbd5e1;
+}
+
+.logo-icon{
+  width:55px;
+  height:55px;
+  background:#38bdf8;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  color:black;
+}
+
+.student-card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:18px;
+  margin-bottom:30px;
+}
+
+.student-card h3{
+  color:#38bdf8;
+  margin-bottom:10px;
+}
+
+.student-card p{
+  font-size:20px;
+  font-weight:700;
+}
+
+.menu-title{
+  color:#94a3b8;
+  margin:25px 0 15px;
+}
+
+.menu{
+  list-style:none;
+}
+
+.menu li{
+  margin-bottom:12px;
+}
+
+.menu a{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  text-decoration:none;
+  color:white;
+  padding:14px 16px;
+  border-radius:14px;
+  transition:.3s;
+}
+
+.menu a:hover,
+.menu .active{
+  background:#38bdf8;
+  color:black;
+}
+
+.menu span{
+  width:36px;
+  height:36px;
+  background:#0f172a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+}
+
+.logout{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:18px;
+  border-radius:18px;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.logout:hover{
+  background:#dc2626;
+}
+
+/* CONTENT */
+
+.content{
+  width:calc(100% - 300px);
+  margin-right:300px;
+  padding:35px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.topbar h1{
+  font-size:40px;
+}
+
+.topbar p{
+  color:#cbd5e1;
+}
+
+.borrowed-box{
+  background:#1e293b;
+  padding:10px 18px;
+  border-radius:20px;
+  color:#38bdf8;
+}
+
+/* الصفحات */
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+/* الصناديق */
+
+.box{
+  background:rgba(17,24,39,.9);
+  padding:30px;
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(12px);
+}
+
+/* البحث */
+
+.search-title{
+  font-size:28px;
+  margin-bottom:20px;
+}
+
+.search-input{
+  width:100%;
+  padding:18px;
+  border:none;
+  border-radius:16px;
+  background:#1e293b;
+  color:white;
+  font-size:16px;
+  margin-bottom:20px;
+  outline:none;
+}
+
+.search-input:focus{
+  border:1px solid #38bdf8;
+}
+
+/* التصنيفات */
+
+.categories{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.categories button{
+  padding:10px 18px;
+  border:none;
+  border-radius:12px;
+  background:#1e293b;
+  color:white;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.categories button:hover{
+  background:#38bdf8;
+  color:black;
+}
+
+/* الكتب */
+
+.books{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:25px;
+}
+
+.book-card{
+  background:#111827;
+  border-radius:24px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.book-card:hover{
+  transform:translateY(-5px);
+}
+
+.book-image{
+  height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+}
+
+.book1{
+  background:#0ea5e9;
+}
+
+.book2{
+  background:#9333ea;
+}
+
+.book-content{
+  padding:25px;
+}
+
+.book-content h3{
+  margin-bottom:8px;
+}
+
+.author{
+  color:#cbd5e1;
+  margin-bottom:15px;
+}
+
+.status{
+  background:#22c55e22;
+  color:#22c55e;
+  padding:8px 14px;
+  border-radius:20px;
+  display:inline-block;
+}
+
+/* الجداول */
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+
+.table th{
+  background:#1e293b;
+  color:#38bdf8;
+  padding:15px;
+}
+
+.table td{
+  background:#111827;
+  padding:15px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+/* textarea */
+
+textarea{
+  width:100%;
+  min-height:140px;
+  background:#1e293b;
+  border:none;
+  border-radius:18px;
+  padding:18px;
+  color:white;
+  margin-top:15px;
+  outline:none;
+  resize:none;
+}
+
+/* buttons */
+
+.confirm-btn,
+.return-btn{
+  padding:12px 20px;
+  border:none;
+  border-radius:12px;
+  background:#38bdf8;
+  color:black;
+  font-weight:700;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.confirm-btn{
+  width:100%;
+  margin-top:20px;
+  padding:18px;
+}
+
+.confirm-btn:hover,
+.return-btn:hover{
+  background:#0ea5e9;
+}
+
+/* responsive */
+
+@media(max-width:1100px){
+
+  body{
+    flex-direction:column;
+  }
+
+  .sidebar{
+    width:100%;
+    position:relative;
+    height:auto;
+  }
+
+  .content{
+    width:100%;
+    margin-right:0;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div>
+
+<div class="logo">
+<div>
+<h2>مكتبة الجامعة</h2>
+<p>بوابة الطالب</p>
+</div>
+
+<div class="logo-icon">📚</div>
+</div>
+
+<div class="student-card">
+<h3>طالب</h3>
+
+<p id="student-info">
+جاري التحميل...
+</p>
+
+</div>
+
+<div class="menu-title">الاستكشاف</div>
+
+<ul class="menu">
+
+<li>
+<a href="#" class="active nav-btn" data-page="search-page">
+البحث عن كتب
+<span>🔍</span>
+</a>
+</li>
+
+<li>
+<a href="#" class="nav-btn" data-page="browse-page">
+تصفح الكتب
+<span>📚</span>
+</a>
+</li>
+
+</ul>
+
+<div class="menu-title">كتبي</div>
+
+<ul class="menu">
+
+<li>
+<a href="#" class="nav-btn" data-page="borrowed-page">
+كتبي المستعارة
+<span>📁</span>
+</a>
+</li>
+
+<li>
+<a href="#" class="nav-btn" data-page="return-page">
+إرجاع كتاب
+<span>📘</span>
+</a>
+</li>
+
+<li>
+<a href="#" class="nav-btn" data-page="history-page">
+سجل الاستعارات
+<span>⏱️</span>
+</a>
+</li>
+
+</ul>
+
+</div>
+
+<button class="logout">تسجيل الخروج</button>
+
+</aside>
+
+<!-- CONTENT -->
+
+<main class="content">
+
+<div class="topbar">
+
+<div>
+<h1 id="page-title">البحث عن كتاب</h1>
+
+<p id="welcome-text">
+مرحباً بك
+</p>
+
+</div>
+
+<div class="borrowed-box">
+2 كتب مستعارة
+</div>
+
+</div>
+
+<!-- البحث -->
+
+<div class="page active" id="search-page">
+
+<div class="box">
+
+<div class="search-title">🔎 البحث في المكتبة</div>
+
+<input type="text"
+class="search-input"
+placeholder="اكتب عنوان الكتاب...">
+
+<div class="categories">
+<button>الكل</button>
+<button>علوم وتقنية</button>
+<button>أدب</button>
+<button>تاريخ</button>
+<button>رياضيات</button>
+</div>
+
+<div class="books">
+
+<div class="book-card">
+
+<div class="book-image book1">🤖</div>
+
+<div class="book-content">
+<h3>مقدمة في الذكاء الاصطناعي</h3>
+<div class="author">د. ريم السلطان</div>
+<div class="status">متوفر (2)</div>
+</div>
+
+</div>
+
+<div class="book-card">
+
+<div class="book-image book2">💻</div>
+
+<div class="book-content">
+<h3>الخوارزميات وتحليل البيانات</h3>
+<div class="author">د. خالد المصري</div>
+<div class="status">متوفر (1)</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- تصفح الكتب -->
+
+<div class="page" id="browse-page">
+
+<div class="box">
+
+<div class="search-title">📚 تصفح الكتب المتاحة</div>
+
+<div class="books">
+
+<div class="book-card">
+<div class="book-image book1">🤖</div>
+
+<div class="book-content">
+<h3>مقدمة في الذكاء الاصطناعي</h3>
+<div class="author">د. ريم السلطان</div>
+<div class="status">متوفر (2)</div>
+</div>
+</div>
+
+<div class="book-card">
+<div class="book-image book2">💻</div>
+
+<div class="book-content">
+<h3>الخوارزميات وتحليل البيانات</h3>
+<div class="author">د. خالد المصري</div>
+<div class="status">متوفر (1)</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- كتبي المستعارة -->
+
+<div class="page" id="borrowed-page">
+
+<div class="box">
+
+<div class="search-title">📁 كتبي المستعارة حالياً</div>
+
+<table class="table">
+
+<tr>
+<th>الكتاب</th>
+<th>المؤلف</th>
+<th>تاريخ الاستعارة</th>
+<th>الحالة</th>
+<th>إجراء</th>
+</tr>
+
+<tr>
+<td>الخوارزميات وتحليل البيانات</td>
+<td>د. خالد المصري</td>
+<td>01/05/2026</td>
+<td>غير منتهية</td>
+<td><button class="return-btn">إرجاع</button></td>
+</tr>
+
+<tr>
+<td>أساسيات قواعد البيانات</td>
+<td>د. سلمى</td>
+<td>25/04/2026</td>
+<td>متأخر</td>
+<td><button class="return-btn">إرجاع</button></td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- ارجاع كتاب -->
+
+<div class="page" id="return-page">
+
+<div class="box">
+
+<div class="search-title">📘 إرجاع كتاب</div>
+
+<select class="search-input">
+<option>الخوارزميات وتحليل البيانات</option>
+<option>أساسيات قواعد البيانات</option>
+</select>
+
+<textarea placeholder="أي ملاحظات تريد إبلاغ المكتبة بها..."></textarea>
+
+<button class="confirm-btn">
+تأكيد الإرجاع
+</button>
+
+</div>
+
+</div>
+
+<!-- سجل الاستعارات -->
+
+<div class="page" id="history-page">
+
+<div class="box">
+
+<div class="search-title">⏱️ سجل استعاراتي</div>
+
+<table class="table">
+
+<tr>
+<th>الكتاب</th>
+<th>تاريخ الاستعارة</th>
+<th>تاريخ الإرجاع</th>
+<th>الحالة</th>
+</tr>
+
+<tr>
+<td>مقدمة في الذكاء الاصطناعي</td>
+<td>01/03/2026</td>
+<td>15/03/2026</td>
+<td>تم الإرجاع</td>
+</tr>
+
+<tr>
+<td>الشبكات والأمن المعلوماتي</td>
+<td>10/02/2026</td>
+<td>24/02/2026</td>
+<td>تم الإرجاع</td>
+</tr>
+
+<tr>
+<td>الخوارزميات وتحليل البيانات</td>
+<td>01/05/2026</td>
+<td>—</td>
+<td>مستعار</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+// جلب بيانات الطالب من localStorage
+
+const studentName = localStorage.getItem("studentName");
+const studentId = localStorage.getItem("studentId");
+
+// عرض البيانات
+
+if(studentName && studentId){
+
+document.getElementById("student-info").innerText =
+studentName + " — " + studentId;
+
+document.getElementById("welcome-text").innerText =
+"مرحباً " + studentName + " إليك كتبك المستعارة حالياً";
+
+}else{
+
+document.getElementById("student-info").innerText =
+"طالب غير معروف";
+
+}
+
+// التنقل بين الصفحات
+
+const navButtons = document.querySelectorAll('.nav-btn');
+const pages = document.querySelectorAll('.page');
+const pageTitle = document.getElementById('page-title');
+
+navButtons.forEach(button => {
+
+button.addEventListener('click', function(e){
+
+e.preventDefault();
+
+navButtons.forEach(btn => {
+btn.classList.remove('active');
+});
+
+this.classList.add('active');
+
+const pageId = this.dataset.page;
+
+pages.forEach(page => {
+page.classList.remove('active');
+});
+
+document.getElementById(pageId).classList.add('active');
+
+pageTitle.innerText = this.innerText;
+
+});
+
+});
+
+// البحث عن الكتب
+
+const searchInput = document.querySelector('.search-input');
+
+searchInput.addEventListener('keyup', function(){
+
+const value = this.value.toLowerCase();
+
+const books = document.querySelectorAll('.book-card');
+
+books.forEach(book => {
+
+const title =
+book.querySelector('h3').innerText.toLowerCase();
+
+if(title.includes(value)){
+
+book.style.display = 'block';
+
+}else{
+
+book.style.display = 'none';
+
+}
+
+});
+
+});
+
+// فتح الكتاب
+
+const bookCards = document.querySelectorAll('.book-card');
+
+bookCards.forEach(card => {
+
+card.addEventListener('click', () => {
+
+const bookName =
+card.querySelector('h3').innerText;
+
+alert('تم فتح الكتاب: ' + bookName);
+
+});
+
+});
+
+// التصنيفات
+
+const categoryButtons =
+document.querySelectorAll('.categories button');
+
+categoryButtons.forEach(button => {
+
+button.addEventListener('click', () => {
+
+alert('تم اختيار تصنيف: ' + button.innerText);
+
+});
+
+});
+
+// أزرار الإرجاع
+
+const returnBtns =
+document.querySelectorAll('.return-btn');
+
+returnBtns.forEach(btn => {
+
+btn.addEventListener('click', () => {
+
+alert('تم تحويلك إلى صفحة إرجاع الكتاب');
+
+});
+
+});
+
+// تسجيل الخروج
+
+const logoutBtn =
+document.querySelector('.logout');
+
+logoutBtn.addEventListener('click', () => {
+
+const confirmLogout =
+confirm('هل تريد تسجيل الخروج؟');
+
+if(confirmLogout){
+
+localStorage.removeItem("name");
+localStorage.removeItem("studentId");
+
+window.location.href =
+'student-login.html';
+
+}
+
+});
+
+</script>
+</body>
+</html>
