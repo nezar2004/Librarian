@@ -664,7 +664,7 @@ tr:hover{
 
 </div>
 
-<a href="#" class="logout-btn" onclick="logout()">
+<a href="#" class="logout-btn" onclick="logout(event)">
 تسجيل الخروج
 </a>
 
@@ -1353,14 +1353,15 @@ document.getElementById('membersCount').innerText=members.length;
 
 }
 
-function logout(){
+function logout(event){
+
+event.preventDefault();
 
 if(confirm('هل تريد تسجيل الخروج؟')){
-window.location.reload();
+window.location.href='login.html';
 }
 
 }
-
 function setDate(){
 
 const today=new Date();
