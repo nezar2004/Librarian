@@ -1,805 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Library Management System</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap"
-    rel="stylesheet">
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Cairo', sans-serif;
-    }
-
-    body {
-      background: #0f172a;
-      color: white;
-      overflow-x: hidden;
-    }
-
-    /* NAVBAR */
-
-    nav {
-      width: 100%;
-      padding: 20px 8%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: blur(12px);
-      background: rgba(15, 23, 42, .7);
-      border-bottom: 1px solid rgba(255, 255, 255, .08);
-    }
-
-    .logo {
-      font-size: 32px;
-      font-weight: 900;
-      color: #38bdf8;
-    }
-
-    nav ul {
-      display: flex;
-      gap: 30px;
-      list-style: none;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: white;
-      transition: .3s;
-      font-weight: 600;
-    }
-
-    nav ul li a:hover {
-      color: #38bdf8;
-    }
-
-    .menu-toggle {
-      display: none;
-      font-size: 32px;
-      cursor: pointer;
-      color: white;
-    }
-
-    /* HERO */
-
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 120px 10%;
-      position: relative;
-
-      background:
-        radial-gradient(circle at top right, #0ea5e955, transparent 30%),
-        radial-gradient(circle at bottom left, #9333ea55, transparent 30%),
-        #0f172a;
-    }
-
-    .hero-content {
-      max-width: 900px;
-      z-index: 2;
-    }
-
-    .hero h1 {
-      font-size: 70px;
-      line-height: 1.2;
-      margin-bottom: 25px;
-      font-weight: 900;
-    }
-
-    .hero h1 span {
-      color: #38bdf8;
-    }
-
-    .hero p {
-      color: #cbd5e1;
-      font-size: 22px;
-      margin-bottom: 40px;
-      line-height: 1.8;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 16px 38px;
-      border-radius: 15px;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-      font-weight: 700;
-      transition: .4s;
-    }
-
-    .btn-primary {
-      background: #38bdf8;
-      color: black;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(56, 189, 248, .4);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 2px solid #38bdf8;
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      background: #38bdf8;
-      color: black;
-    }
-
-    /* SECTION */
-
-    section {
-      padding: 100px 8%;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 70px;
-    }
-
-    .section-title h2 {
-      font-size: 50px;
-      margin-bottom: 15px;
-      color: #38bdf8;
-    }
-
-    .section-title p {
-      color: #94a3b8;
-      font-size: 20px;
-    }
-
-    /* CARDS */
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, .05);
-      border: 1px solid rgba(255, 255, 255, .08);
-      padding: 35px;
-      border-radius: 25px;
-      transition: .4s;
-      backdrop-filter: blur(10px);
-    }
-
-    .card:hover {
-      transform: translateY(-10px);
-      border-color: #38bdf8;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, .4);
-    }
-
-    .card h3 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      color: #38bdf8;
-    }
-
-    .card ul {
-      list-style: none;
-    }
-
-    .card ul li {
-      margin: 15px 0;
-      color: #e2e8f0;
-      font-size: 18px;
-      position: relative;
-      padding-right: 25px;
-    }
-
-    .card ul li::before {
-      content: "✔";
-      position: absolute;
-      right: 0;
-      color: #22c55e;
-    }
-
-    /* FEATURES */
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-    }
-
-    .feature {
-      background: linear-gradient(145deg, #111827, #1e293b);
-      padding: 30px;
-      border-radius: 25px;
-      text-align: center;
-      transition: .4s;
-    }
-
-    .feature:hover {
-      transform: scale(1.05);
-    }
-
-    .feature i {
-      font-size: 50px;
-      margin-bottom: 20px;
-      color: #38bdf8;
-    }
-
-    .feature h4 {
-      font-size: 24px;
-      margin-bottom: 15px;
-    }
-
-    .feature p {
-      color: #cbd5e1;
-      line-height: 1.8;
-    }
-
-    /* STATS */
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 30px;
-      text-align: center;
-    }
-
-    .stat {
-      padding: 40px;
-      border-radius: 25px;
-      background: rgba(255, 255, 255, .05);
-    }
-
-    .stat h2 {
-      font-size: 55px;
-      color: #38bdf8;
-    }
-
-    .stat p {
-      margin-top: 10px;
-      color: #cbd5e1;
-      font-size: 18px;
-    }
-
-    /* FOOTER */
-
-    footer {
-      padding: 40px;
-      text-align: center;
-      background: #020617;
-      color: #94a3b8;
-      border-top: 1px solid rgba(255, 255, 255, .08);
-    }
-
-    .footer-email {
-      color: #38bdf8;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      overflow-wrap: anywhere;
-    }
-
-    /* MOBILE */
-
-    @media(max-width:768px) {
-
-      nav {
-        padding: 20px 6%;
-      }
-
-      .menu-toggle {
-        display: block;
-      }
-
-      nav ul {
-        position: absolute;
-        top: 90px;
-        right: 0;
-        width: 100%;
-        background: #0f172a;
-        flex-direction: column;
-        text-align: center;
-        padding: 30px 0;
-        display: none;
-        border-top: 1px solid rgba(255, 255, 255, .08);
-      }
-
-      nav ul.active {
-        display: flex;
-      }
-
-      nav ul li {
-        margin: 15px 0;
-      }
-
-      .hero {
-        padding: 150px 6% 100px;
-      }
-
-      .hero h1 {
-        font-size: 40px;
-        line-height: 1.5;
-      }
-
-      .hero p {
-        font-size: 18px;
-      }
-
-      .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .btn {
-        width: 100%;
-        max-width: 300px;
-      }
-
-      .section-title h2 {
-        font-size: 34px;
-      }
-
-      .cards,
-      .features,
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .card,
-      .feature,
-      .stat {
-        padding: 25px;
-      }
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Librarian نظام إدارة مكتبة. ابحث عن الكتب، تحقّق من التوفّر وموقع الرف، أو ادخل إلى بوابة الطالب أو أمين المكتبة.">
+  <title>Librarian | نظام إدارة المكتبة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&amp;display=swap">
+  <link rel="stylesheet" href="library-theme.css">
+  <script src="library-home.js" type="module"></script>
 </head>
-
-<body>
-
-  <!-- NAVBAR -->
-
-  <nav>
-
-    <div class="logo">LMS</div>
-
-    <div class="menu-toggle" id="menu-toggle">
-      ☰
+<body class="library-site">
+  <a class="site-skip" href="#main">انتقل إلى المحتوى</a>
+  <header class="site-header">
+    <div class="site-shell site-header-inner">
+      <a class="site-brand" href="index.html"><span class="site-brand-mark"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a3 3 0 0 1 3-3h12v18H7a3 3 0 0 1 0-6h12M4 5v12m4-10h7m-7 4h5"/></svg></span><span dir="ltr">Librarian</span></a>
+      <button class="site-menu-button" id="menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" hidden>القائمة</button>
+      <nav id="mobile-menu" class="site-nav" aria-label="التنقّل الرئيسي">
+        <a href="catalog.html">الكتالوج</a>
+        <a href="#services">الخدمات</a>
+        <a href="#reports">التقارير</a>
+        <a href="#contact">تواصل</a>
+      </nav>
     </div>
-
-    <ul id="mobile-menu">
-      <li><a href="catalog.html">كتالوج الكتب</a></li>
-
-	  <!-- الرئيسية -->
-	  <li>
-		<a href="index.html">
-		  الرئيسية
-		</a>
-	  </li>
-
-	  <!-- الخدمات -->
-	  <li>
-		<a href="#services">
-		  الخدمات
-		</a>
-	  </li>
-
-	  <!-- المميزات -->
-	  <li>
-		<a href="#features">
-		  المميزات
-		</a>
-	  </li>
-
-	  <!-- التقارير -->
-	  <li>
-		<a href="#reports">
-		  التقارير
-		</a>
-	  </li>
-
-	  <!-- التواصل -->
-	  <li>
-		<a href="#contact">
-		  تواصل
-		</a>
-	  </li>
-
-	  <li>
-		  <a href="#" onclick="openYU()">
-			جامعة اليرموك
-		  </a>
-	  </li>
-	</ul>
-
-  </nav>
-
-  <!-- HERO -->
-
-  <section class="hero">
-
-    <div class="hero-content">
-
-      <h1>
-        نظام إدارة مكتبة
-        <span>احترافي وذكي</span>
-      </h1>
-
-      <p>
-        أفضل منصة رقمية لإدارة الكتب والأعضاء وعمليات الاستعارة والإرجاع
-        مع تصميم عصري وتجربة استخدام مذهلة.
-      </p>
-
-      <div class="hero-buttons">
-        <a class="btn btn-primary" href="catalog.html">تصفّح كتالوج الكتب</a>
-
-		  <a href="student_login.html">
-			<button class="btn btn-primary">
-			  🎓 دخول الطالب
-			</button>
-		  </a>
-
-		  <a href="admin_login.html">
-			<button class="btn btn-secondary">
-			  👨‍💼 دخول أمين المكتبة
-			</button>
-		  </a>
-
-		</div>
-
-    </div>
-
-  </section>
-<!-- SERVICES -->
-
-<section id="services">
-
-  <div class="section-title">
-    <h2>الخدمات</h2>
-    <p>الخدمات التي يقدمها نظام إدارة المكتبة</p>
-  </div>
-
-  <div class="cards">
-
-    <div class="card">
-      <h3>📚 إدارة الكتب</h3>
-      <ul>
-        <li>إضافة الكتب الجديدة</li>
-        <li>تعديل بيانات الكتب</li>
-        <li>حذف الكتب</li>
-        <li>تنظيم التصنيفات</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>👥 إدارة الطلاب</h3>
-      <ul>
-        <li>تسجيل أعضاء جدد</li>
-        <li>متابعة حالة العضوية</li>
-        <li>إدارة بيانات الطلاب</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>🔍 البحث الذكي</h3>
-      <ul>
-        <li>البحث باسم الكتاب</li>
-        <li>البحث بالمؤلف</li>
-        <li>البحث باستخدام ISBN</li>
-      </ul>
-    </div>
-
-  </div>
-
-</section>
-<!-- FEATURES -->
-
-<section id="features">
-
-  <div class="section-title">
-    <h2>المميزات</h2>
-    <p>أهم مميزات النظام</p>
-  </div>
-
-  <div class="features">
-
-    <div class="feature">
-      <i>⚡</i>
-      <h4>سرعة الأداء</h4>
-      <p>تنفيذ العمليات بسرعة وكفاءة عالية.</p>
-    </div>
-
-    <div class="feature">
-      <i>📱</i>
-      <h4>تصميم متجاوب</h4>
-      <p>يعمل على الكمبيوتر والموبايل والتابلت.</p>
-    </div>
-
-    <div class="feature">
-      <i>🔒</i>
-      <h4>حماية وأمان</h4>
-      <p>تسجيل دخول آمن للطلاب والإدارة.</p>
-    </div>
-
-    <div class="feature">
-      <i>📊</i>
-      <h4>تقارير ذكية</h4>
-      <p>إحصائيات وتقارير دقيقة للمكتبة.</p>
-    </div>
-
-  </div>
-
-</section>
-<!-- REPORTS -->
-
-<section id="reports">
-
-  <div class="section-title">
-    <h2>التقارير</h2>
-    <p>تقارير وإحصائيات النظام</p>
-  </div>
-
-  <div class="cards">
-
-    <div class="card">
-      <h3>📚 تقرير الكتب</h3>
-      <ul>
-        <li>عدد الكتب المتوفرة</li>
-        <li>عدد الكتب المستعارة</li>
-        <li>أكثر الكتب طلباً</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>👨‍🎓 تقرير الطلاب</h3>
-      <ul>
-        <li>عدد الأعضاء المسجلين</li>
-        <li>الطلاب الأكثر استعارة</li>
-        <li>متابعة الغرامات</li>
-      </ul>
-    </div>
-
-  </div>
-
-</section>
-  <!-- FEATURES -->
-
-  <section>
-
-    <div class="section-title">
-      <h2>الوظائف الرئيسية</h2>
-      <p>كل ما تحتاجه لإدارة مكتبة حديثة</p>
-    </div>
-
-    <div class="features">
-
-      <div class="feature">
-        <i>📚</i>
-        <h4>إدارة الكتب</h4>
-        <p>إضافة وتعديل وحذف الكتب بسهولة.</p>
+  </header>
+  <main class="site-shell" id="main" tabindex="-1">
+    <section class="site-hero" aria-labelledby="home-title">
+      <div class="hero-copy">
+        <p class="site-kicker"><span></span> نظام إدارة المكتبة</p>
+        <h1 id="home-title">اعثر على كتابك.<br><em>واعرف وين تلاقيه.</em></h1>
+        <p class="site-lead">ابحث في الكتالوج، شوف النسخ المتاحة وموقع الرف، وتابع استعاراتك من بوابة الطالب.</p>
+        <form class="hero-search" action="catalog.html" method="get">
+          <label for="home-search">ابحث باسم الكتاب أو المؤلف أو ISBN</label>
+          <div class="hero-search-row">
+            <input id="home-search" name="q" type="search" maxlength="160" placeholder="مثال: الذكاء الاصطناعي">
+            <button type="submit" class="site-button site-primary"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg> بحث</button>
+          </div>
+        </form>
+        <a class="site-text-link" href="catalog.html">تصفّح كل الكتب <svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m7 7-7-7 7-7"/></svg></a>
       </div>
-
-      <div class="feature">
-        <i>👥</i>
-        <h4>إدارة الأعضاء</h4>
-        <p>تسجيل الأعضاء ومتابعة بياناتهم.</p>
+      <div class="hero-artwork"><svg viewBox="0 0 480 410" class="hero-illustration" aria-hidden="true">
+  <defs>
+    <linearGradient id="panel-glow" x2="1" y2="1"><stop stop-color="#153a58"/><stop offset="1" stop-color="#10192c"/></linearGradient>
+    <linearGradient id="book-blue" x2="1" y2="1"><stop stop-color="#73d8f8"/><stop offset="1" stop-color="#2c82b8"/></linearGradient>
+    <pattern id="library-grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0v28" fill="none" stroke="#9ee1f8" stroke-opacity=".11"/></pattern>
+  </defs>
+  <rect x="12" y="12" width="456" height="386" rx="30" fill="url(#panel-glow)" stroke="#375c77"/>
+  <rect x="13" y="13" width="454" height="384" rx="30" fill="url(#library-grid)"/>
+  <circle cx="239" cy="200" r="132" fill="none" stroke="#77d0ed" stroke-opacity=".3"/>
+  <circle cx="239" cy="200" r="107" fill="#58b1d8" fill-opacity=".08" stroke="#77d0ed" stroke-opacity=".3" stroke-dasharray="3 8"/>
+  <path d="M80 324h322" stroke="#82d3ed" stroke-opacity=".45" stroke-width="2"/>
+  <rect x="111" y="139" width="49" height="183" rx="8" fill="#2b536c" stroke="#68adc8"/>
+  <path d="M125 157h21m-21 145h21" stroke="#88d8ef" stroke-width="3"/>
+  <rect x="169" y="104" width="68" height="218" rx="9" fill="url(#book-blue)"/>
+  <path d="M185 130h37m-37 12h23m-23 154h37" stroke="#12394f" stroke-width="3" stroke-linecap="round"/>
+  <rect x="247" y="165" width="45" height="157" rx="8" fill="#f2cf8c"/>
+  <path d="M259 185h21m-21 115h21" stroke="#6b502c" stroke-width="3" stroke-linecap="round"/>
+  <g transform="rotate(-15 340 322)"><rect x="316" y="126" width="53" height="196" rx="8" fill="#8d9bef"/><path d="M330 151h25m-25 145h25" stroke="#363d77" stroke-width="3" stroke-linecap="round"/></g>
+  <path d="M47 54h32m-32 0v32m386 270h-32m32 0v-32" fill="none" stroke="#85d9f3" stroke-width="2"/>
+  <circle cx="379" cy="83" r="5" fill="#f2cf8c"/><circle cx="93" cy="110" r="3" fill="#73d8f8"/>
+</svg></div>
+    </section>
+    <section class="library-metrics" aria-label="لمحة عن الكتالوج">
+      <div><strong id="books-count">—</strong><span>عنوان في الكتالوج</span></div>
+      <div><strong id="available-count">—</strong><span>عنوان متاح للاستعارة</span></div>
+      <div><strong id="categories-count">—</strong><span>تصنيف</span></div>
+    </section>
+    <section class="site-section" id="services" tabindex="-1" aria-labelledby="services-title">
+      <div class="site-section-head">
+        <div><p class="site-kicker">01 / بوابات المكتبة</p><h2 id="services-title">اختر طريقة الدخول</h2></div>
+        <p>الكتالوج مفتوح للجميع. استخدم حسابك للوصول إلى أدوات الطالب أو أمين المكتبة.</p>
       </div>
-
-      <div class="feature">
-        <i>🔍</i>
-        <h4>البحث الذكي</h4>
-        <p>البحث السريع عن الكتب والمؤلفين.</p>
+      <div class="portal-grid">
+        <article class="portal-card portal-student"><div class="portal-icon"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg></div><h3>بوابة الطالب</h3><p>تصفّح الكتب، راجع استعاراتك الحالية، وشوف سجلّك من حساب واحد.</p><a class="site-button site-primary" href="student_login.html">دخول الطالب <svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m7 7-7-7 7-7"/></svg></a></article>
+        <article class="portal-card portal-staff"><div class="portal-icon"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a3 3 0 0 1 3-3h12v18H7a3 3 0 0 1 0-6h12M4 5v12m4-10h7m-7 4h5"/></svg></div><h3>بوابة أمين المكتبة</h3><p>أدر الكتب والأعضاء والإعارات، وحدّد مواقع الرفوف أو استورد قوائم الكتب من Excel.</p><a class="site-button site-secondary" href="admin_login.html">دخول أمين المكتبة <svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m7 7-7-7 7-7"/></svg></a></article>
       </div>
-
-      <div class="feature">
-        <i>📖</i>
-        <h4>إصدار الكتب</h4>
-        <p>إدارة الاستعارة والإرجاع بدقة.</p>
+    </section>
+    <section class="site-section" id="features" aria-labelledby="features-title">
+      <div class="site-section-head">
+        <div><p class="site-kicker">02 / الكتالوج العام</p><h2 id="features-title">من البحث إلى الرف</h2></div>
       </div>
-
-      <div class="feature">
-        <i>⏰</i>
-        <h4>حساب الغرامات</h4>
-        <p>حساب الغرامات تلقائياً.</p>
+      <div class="feature-grid">
+        <article class="feature-card"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg><h3>ابحث بطريقتك</h3><p>استخدم عنوان الكتاب، اسم المؤلف أو الرقم الدولي ISBN.</p></article>
+        <article class="feature-card"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a3 3 0 0 1 3-3h12v18H7a3 3 0 0 1 0-6h12M4 5v12m4-10h7m-7 4h5"/></svg><h3>تحقّق من التوفّر</h3><p>فلتر الكتالوج حتى تشوف العناوين المتاحة حاليًا.</p></article>
+        <article class="feature-card"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18M5 4h4v16H5zm4 3h4v13H9zm5-1 4-1 4 14-4 1z"/></svg><h3>اعرف موقع الكتاب</h3><p>شوف الطابق والقسم والرف لما يكون موقع الكتاب مسجّلًا.</p></article>
       </div>
-
-      <div class="feature">
-        <i>📊</i>
-        <h4>التقارير</h4>
-        <p>تقارير احترافية وشاملة.</p>
-      </div>
-
+    </section>
+    <section class="site-section report-section" id="reports" tabindex="-1" aria-labelledby="reports-title">
+      <div class="report-icon"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21h16M6 17v-5m6 5V7m6 10V3"/></svg></div>
+      <div><p class="site-kicker">03 / أدوات الإدارة</p><h2 id="reports-title">تقارير المكتبة</h2><p>راجع الجرد والإعارات ونشاط الأعضاء من لوحة أمين المكتبة.</p></div>
+      <a class="site-button site-secondary" href="admin_login.html">ادخل إلى لوحة الإدارة <svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m7 7-7-7 7-7"/></svg></a>
+    </section>
+  </main>
+  <footer class="site-footer" id="contact" tabindex="-1">
+    <div class="site-shell site-footer-inner">
+      <div><a class="site-brand" href="index.html"><span class="site-brand-mark"><svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a3 3 0 0 1 3-3h12v18H7a3 3 0 0 1 0-6h12M4 5v12m4-10h7m-7 4h5"/></svg></span><span dir="ltr">Librarian</span></a><p>نظام إدارة المكتبة</p></div>
+      <div><p>للتواصل</p><a href="mailto:nezarmoon2004@gmail.com" dir="ltr">nezarmoon2004@gmail.com</a></div>
+      <a href="https://www.yu.edu.jo">جامعة اليرموك <svg class="site-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4m7 7-7-7 7-7"/></svg></a>
     </div>
-
-  </section>
-
-  <!-- STATS -->
-
-  <section>
-
-	  <div class="section-title">
-		<h2>إحصائيات النظام</h2>
-		<p>إحصائيات حقيقية مباشرة من قاعدة البيانات</p>
-	  </div>
-
-	  <div class="stats">
-
-		<div class="stat">
-		  <h2 id="books-count">0</h2>
-		  <p>كتاب</p>
-		</div>
-
-		<div class="stat">
-		  <h2 id="students-count">0</h2>
-		  <p>طالب</p>
-		</div>
-
-		<div class="stat">
-		  <h2 id="borrowed-count">0</h2>
-		  <p>كتاب مستعار</p>
-		</div>
-
-		<div class="stat">
-		  <h2 id="returned-count">0</h2>
-		  <p>كتاب مُرجع</p>
-		</div>
-
-	  </div>
-
-  </section>
-
-  <!-- FOOTER -->
-
-  <footer id="contact">
-    <p>للتواصل: <a class="footer-email" href="mailto:nezarmoon2004@gmail.com" dir="ltr">nezarmoon2004@gmail.com</a></p>
-    © 2026 Library Management System | جميع الحقوق محفوظة
   </footer>
-
-
-  <!-- عرض موقع الجامعة داخل الصفحة -->
-
-<div id="yuFrame" style="display:none; width:100%; height:100vh; margin-top:90px;">
-  <iframe 
-    src="https://www.yu.edu.jo"
-    width="100%"
-    height="100%"
-    style="border:none;">
-  </iframe>
-</div>
-
-<script>
-
-  const menuToggle = document.getElementById('menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  menuToggle.onclick = () => {
-    mobileMenu.classList.toggle('active');
-  }
-
-  function openYU() {
-
-    // اخفاء كل محتوى الصفحة
-    document.querySelector('.hero').style.display = 'none';
-
-    document.querySelectorAll('section').forEach(sec => {
-      sec.style.display = 'none';
-    });
-
-    document.querySelector('footer').style.display = 'none';
-
-    // اظهار موقع الجامعة
-    document.getElementById('yuFrame').style.display = 'block';
-  }
-
-</script>
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-getDocs,
-query,
-where
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* FIREBASE CONFIG */
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyCkCR-nUCHQYRiLILTdSzCeYn2CTB94ILQ",
-
-authDomain: "laib-64c9b.firebaseapp.com",
-
-projectId: "laib-64c9b",
-
-storageBucket: "laib-64c9b.firebasestorage.app",
-
-messagingSenderId: "429556863392",
-
-appId: "1:429556863392:web:1cffe618fd87b6606914c5"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-/* LOAD REAL STATS */
-
-async function loadStats(){
-
-/* الكتب */
-
-const booksSnapshot =
-await getDocs(collection(db,"books"));
-
-document.getElementById("books-count")
-.innerText =
-booksSnapshot.size;
-
-/* الطلاب */
-
-const studentsSnapshot =
-await getDocs(collection(db,"students"));
-
-document.getElementById("students-count")
-.innerText =
-studentsSnapshot.size;
-
-/* الكتب المستعارة */
-
-const borrowedQuery = query(
-collection(db,"borrows"),
-where("status","==","borrowed")
-);
-
-const borrowedSnapshot =
-await getDocs(borrowedQuery);
-
-document.getElementById("borrowed-count")
-.innerText =
-borrowedSnapshot.size;
-
-/* الكتب المرجعة */
-
-const returnedQuery = query(
-collection(db,"borrows"),
-where("status","==","returned")
-);
-
-const returnedSnapshot =
-await getDocs(returnedQuery);
-
-document.getElementById("returned-count")
-.innerText =
-returnedSnapshot.size;
-
-}
-
-loadStats();
-
-</script>
 </body>
-
 </html>

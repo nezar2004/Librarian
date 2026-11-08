@@ -19,6 +19,7 @@ appId: "1:429556863392:web:1cffe618fd87b6606914c5"
 };
 const db = getFirestore(initializeApp(firebaseConfig));
 const search = document.querySelector("#catalog-search");
+search.value = (new URLSearchParams(location.search).get("q") || "").slice(0, 160);
 const availability = document.querySelector("#catalog-availability");
 const status = document.querySelector("#catalog-status");
 const results = document.querySelector("#catalog-results");
