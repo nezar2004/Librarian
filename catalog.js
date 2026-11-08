@@ -55,6 +55,10 @@ function render() {
     addText(card, "p", !known ? "التوفّر غير محدد" : count > 0 ? "متاح: " + count : "غير متاح حاليًا", "catalog-stock");
     if (book.isbn) addText(card, "p", "ISBN: " + book.isbn);
     addText(card, "p", shelfLabel(book), "catalog-shelf");
+    const request = document.createElement("a");
+    request.href = "reservations.html?book=" + encodeURIComponent(book.id);
+    request.textContent = count > 0 ? "اطلب حجز نسخة" : "انضم لقائمة الانتظار";
+    card.append(request);
     results.append(card);
   }
   status.textContent = filtered.length ? "عدد النتائج: " + filtered.length : "ما في كتب بتطابق البحث.";
@@ -63,7 +67,7 @@ function render() {
 function resetPage() { shown = pageSize; render(); }
 try {
   const snapshot = await getDocs(collection(db, "books"));
-  books = snapshot.docs.map(item => item.data()).sort((a, b) => String(a.title ?? "").localeCompare(String(b.title ?? ""), "ar"));
+  books = snapshot.docs.map(item => ({ ...item.data(), id: item.id })).sort((a, b) => String(a.title ?? "").localeCompare(String(b.title ?? ""), "ar"));
   search.addEventListener("input", resetPage);
   availability.addEventListener("change", resetPage);
   more.addEventListener("click", () => { shown += pageSize; render(); });
