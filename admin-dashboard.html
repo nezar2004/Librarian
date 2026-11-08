@@ -592,6 +592,7 @@ tr:hover{
   display:none;
 }
 </style>
+<link rel="stylesheet" href="library-tools.css">
 </head>
 <body>
 
@@ -768,6 +769,9 @@ tr:hover{
 <label>الرقم المرجعي ISBN</label>
 <input type="text" id="bookISBN">
 </div>
+<div class="input-group"><label for="bookFloor">الطابق</label><input id="bookFloor" maxlength="60"></div>
+<div class="input-group"><label for="bookSection">القسم</label><input id="bookSection" maxlength="80"></div>
+<div class="input-group"><label for="bookShelf">الرف</label><input id="bookShelf" maxlength="60"></div>
 
 <div class="input-group">
 <label>التصنيف</label>
@@ -817,6 +821,27 @@ tr:hover{
 <span>🔍</span>
 <input type="text" placeholder="ابحث عن كتاب..." onkeyup="searchBooks(this.value)">
 </div>
+<details class="library-tool" id="shelf-tool">
+<summary>تحديد موقع كتاب على الرف</summary>
+<form id="shelf-form">
+<div class="library-tool-fields">
+<label>الكتاب<select id="shelf-book" required><option value="">اختر كتابًا</option></select></label>
+<label>الطابق<input id="shelf-floor" maxlength="60"></label>
+<label>القسم<input id="shelf-section" maxlength="80"></label>
+<label>الرف<input id="shelf-code" maxlength="60"></label>
+</div>
+<button class="btn btn-primary" type="submit">حفظ موقع الرف</button>
+</form>
+<p id="shelf-status" role="status"></p>
+</details>
+<details class="library-tool" id="import-tool">
+<summary>استيراد الكتب من Excel أو CSV</summary>
+<p>الصف الأول عناوين الأعمدة. استخدم: title, author, isbn, category, copies, floor, section, shelf. العنوان والمؤلف مطلوبان. حدّ أقصى 100 صف في الملف.</p>
+<label>ملف الكتب <input type="file" id="book-import-file" accept=".xlsx,.xls,.csv"></label>
+<p id="book-import-status" role="status"></p>
+<div class="preview-table"><table><thead><tr><th>الصف</th><th>العنوان</th><th>المؤلف</th><th>الحالة</th></tr></thead><tbody id="book-import-preview"></tbody></table></div>
+<button class="btn btn-primary" type="button" id="book-import-confirm" disabled>حفظ الصفوف الجاهزة</button>
+</details>
 
 <div class="table-wrap">
 <table>
@@ -1118,8 +1143,12 @@ messagingSenderId: "429556863392",
 appId: "1:429556863392:web:1cffe618fd87b6606914c5"
 };
 
+import { initBookAdmin, requireLibrarian } from "./book-admin.js";
+import { safeBookText } from "./book-tools.js";
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+initBookAdmin(app, db, () => Promise.all([renderBooks(), updateCounters()]));
 
 /* ================= OPEN PANELS ================= */
 
@@ -1262,14 +1291,20 @@ window.saveBook = async function(){
 const title=document.getElementById('bookTitle').value;
 const author=document.getElementById('bookAuthor').value;
 const category=document.getElementById('bookCategory').value;
-const copies=parseInt(document.getElementById('bookCopies').value);
+const copies=Number(document.getElementById('bookCopies').value);
 
-if(title==='' || author===''){
+if(!title.trim() || !author.trim() || !Number.isInteger(copies) || copies < 1 || copies > 10000){
 alert('الرجاء تعبئة الحقول');
 return;
 }
 
+try {
+await requireLibrarian(app, db);
 await addDoc(collection(db,"books"),{
+isbn: safeBookText(document.getElementById("bookISBN").value, 30),
+floor: safeBookText(document.getElementById("bookFloor").value, 60),
+section: safeBookText(document.getElementById("bookSection").value, 80),
+shelf: safeBookText(document.getElementById("bookShelf").value, 60),
 
 title,
 author,
@@ -1279,6 +1314,10 @@ available:copies,
 createdAt:new Date()
 
 });
+} catch (error) {
+alert(error.message || "تعذّر حفظ الكتاب.");
+return;
+}
 
 alert('تم إضافة الكتاب');
 
@@ -1313,6 +1352,7 @@ window.clearBookForm = function(){
 document.getElementById('bookTitle').value='';
 document.getElementById('bookAuthor').value='';
 document.getElementById('bookISBN').value='';
+for (const id of ['bookFloor','bookSection','bookShelf']) document.getElementById(id).value='';
 document.getElementById('bookCopies').value='1';
 document.getElementById('bookNotes').value='';
 

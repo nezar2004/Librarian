@@ -1,0 +1,17 @@
+.catalog-page{margin:0;background:#101727;color:#eef5ff;font:1rem/1.65 system-ui,sans-serif}
+.catalog-shell{width:min(72rem,calc(100% - 2rem));margin-inline:auto}
+.catalog-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:1rem;border-bottom:1px solid #334155}
+.catalog-header a{color:#7dd3fc;display:inline-flex;align-items:center;min-height:44px}
+.catalog-page main{padding-block:2.5rem 4rem}.catalog-page h1{font-size:clamp(2.3rem,6vw,4rem);line-height:1.15;margin:.3rem 0 1rem}
+.catalog-page p{margin:.4rem 0}.catalog-kicker{color:#7dd3fc;font-weight:700}.catalog-stock{font-weight:700}.catalog-shelf{color:#c5d3e8}
+.catalog-filters,.library-tool-fields{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-block:1.2rem}
+.catalog-filters label,.library-tool-fields label{display:grid;gap:.4rem;min-width:0}
+.catalog-page :is(input,select,button){font:inherit;color:inherit;background:#1c263a;border:1px solid #475569;border-radius:.45rem;padding:.5rem .65rem;min-height:44px;min-width:0}
+.catalog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-block:1rem}
+.catalog-card{min-width:0;border:1px solid #334155;border-radius:.75rem;background:#182135;padding:1rem;overflow-wrap:anywhere}.catalog-card h2{font-size:1.2rem;margin:.25rem 0}
+.catalog-page :focus-visible{outline:2px solid #7dd3fc;outline-offset:3px}
+.library-tool{margin-block:1rem;padding:1rem;border:1px solid #475569;border-radius:.65rem;overflow-wrap:anywhere}.library-tool summary{cursor:pointer;font-weight:700}
+.library-tool form{margin-block:.8rem}.library-tool input,.library-tool select{max-width:100%;min-width:0}.library-tool p{margin-block:.65rem}.library-tool ul{padding-inline-start:1.25rem}
+.library-tool .preview-table{overflow:auto;max-height:20rem}.library-tool [role=status]:empty{display:none}
+@media(max-width:760px){.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.catalog-grid,.catalog-filters,.library-tool-fields{grid-template-columns:1fr}}

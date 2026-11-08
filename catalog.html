@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ابحث في كتالوج Librarian باسم الكتاب أو المؤلف أو ISBN، وراجع التوفر وموقع الرف.">
+  <title>كتالوج الكتب | Librarian</title>
+  <link rel="stylesheet" href="library-tools.css">
+  <script type="module" src="catalog.js"></script>
+</head>
+<body class="catalog-page">
+  <header class="catalog-shell catalog-header"><a href="index.html">Librarian</a><a href="student_login.html">دخول الطالب</a></header>
+  <main class="catalog-shell">
+    <p class="catalog-kicker">المكتبة الرقمية</p>
+    <h1>كتالوج الكتب</h1>
+    <p>ابحث عن الكتاب واعرف إذا في نسخة متاحة ووين تلاقيها.</p>
+    <div class="catalog-filters">
+      <label>ابحث بالعنوان أو المؤلف أو ISBN<input id="catalog-search" type="search" maxlength="160"></label>
+      <label>التوفّر<select id="catalog-availability"><option value="">كل الكتب</option><option value="available">متاحة الآن</option><option value="unavailable">غير متاحة</option></select></label>
+    </div>
+    <p id="catalog-status" role="status">جاري تحميل الكتب…</p>
+    <div id="catalog-results" class="catalog-grid"></div>
+    <button id="catalog-more" type="button" hidden>عرض المزيد</button>
+    <noscript>فعّل JavaScript لعرض الكتالوج.</noscript>
+  </main>
+</body>
+</html>
