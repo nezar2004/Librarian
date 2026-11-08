@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>دخول أمين المكتبة | Librarian</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&amp;display=swap">
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="login.css?v=language-1">
 </head>
 <body class="login-page staff-login">
   <header class="login-shell login-header">
     <a class="login-brand" href="index.html"><span aria-hidden="true">L</span> Librarian</a>
     <a href="index.html">الصفحة الرئيسية <span aria-hidden="true">↖</span></a>
+    <button id="library-language" class="language-control" type="button" lang="en" aria-label="English" hidden>English</button>
   </header>
   <main class="login-shell login-layout">
     <div class="login-intro">
@@ -41,7 +42,7 @@
     </section>
   </main>
 <script type="module">
-import { initLogin, showLoginStatus } from "./login-ui.js";
+import { initLogin, showLoginStatus } from "./login-ui.js?v=language-1";
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";

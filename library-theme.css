@@ -110,3 +110,13 @@
   .library-metrics > div { padding-inline: .55rem; }
   .library-metrics span { font-size: .75rem; line-height: 1.5; }
 }
+
+.language-control { min-height: 44px; padding: .35rem .7rem; border: 1px solid #526783; border-radius: .55rem; color: var(--ink); background: #1a2940; font: 700 .85rem/1.4 system-ui, sans-serif; cursor: pointer; white-space: nowrap; }
+.language-control:hover { border-color: var(--accent); }
+[dir="ltr"] .site-icon:has(path[d="M20 12H4m7 7-7-7 7-7"]) { transform: scaleX(-1); }
+@media (max-width: 640px) {
+  .site-nav { order: 3; }
+}
+@media (max-width: 390px) {
+  .login-header { gap: .4rem; flex-wrap: wrap; }
+}

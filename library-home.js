@@ -1,3 +1,4 @@
+import { languageCode } from "./library-language.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { collection, getDocs, getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -44,11 +45,15 @@ smallScreen.addEventListener("change", closeMenu);
 try {
   const db = getFirestore(initializeApp(firebaseConfig));
   const books = (await getDocs(collection(db, "books"))).docs.map(book => book.data());
-  const number = new Intl.NumberFormat("ar-JO");
+  function renderCounts() {
+  const number = new Intl.NumberFormat(languageCode() === "en" ? "en" : "ar-JO");
   document.getElementById("books-count").textContent = number.format(books.length);
   document.getElementById("available-count").textContent = number.format(books.filter(book => Number(book.available) > 0).length);
   const categories = new Set(books.map(book => String(book.category ?? "").trim()).filter(Boolean));
   document.getElementById("categories-count").textContent = number.format(categories.size);
+  }
+  document.addEventListener("library:language", renderCounts);
+  renderCounts();
 } catch {
   // Catalog navigation and sign-in remain usable without the counters.
 }

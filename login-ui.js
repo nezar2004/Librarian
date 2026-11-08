@@ -1,6 +1,13 @@
+import { translate } from "./library-language.js";
+let lastMessage = "";
+document.addEventListener("library:language", () => {
+  document.getElementById("login-status").textContent = translate(lastMessage);
+});
+
 export function showLoginStatus(message, state) {
   const status = document.getElementById("login-status");
-  status.textContent = message;
+  lastMessage = message;
+  status.textContent = translate(message);
   status.dataset.state = state;
 }
 
@@ -28,11 +35,14 @@ export function initLogin(authenticate, resetPassword) {
     }
   }
 
+  document.addEventListener("library:language", () => {
+    toggle.textContent = translate(password.type === "password" ? "إظهار" : "إخفاء");
+  });
   toggle.hidden = false;
   toggle.addEventListener("click", () => {
     const visible = password.type === "password";
     password.type = visible ? "text" : "password";
-    toggle.textContent = visible ? "إخفاء" : "إظهار";
+    toggle.textContent = translate(visible ? "إخفاء" : "إظهار");
     toggle.setAttribute("aria-pressed", String(visible));
   });
   form.addEventListener("submit", event => {
