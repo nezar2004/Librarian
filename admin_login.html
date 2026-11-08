@@ -1,212 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>دخول أمين المكتبة</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap"
-    rel="stylesheet">
-
-  <style>
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:'Cairo',sans-serif;
-    }
-
-    body{
-      background:
-      radial-gradient(circle at top right,#0ea5e955,transparent 30%),
-      radial-gradient(circle at bottom left,#9333ea55,transparent 30%),
-      #0f172a;
-
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      overflow:hidden;
-      color:white;
-    }
-
-    .login-box{
-      width:90%;
-      max-width:430px;
-      background:rgba(17,24,39,.9);
-      padding:45px;
-      border-radius:30px;
-      text-align:center;
-      border:1px solid rgba(255,255,255,.08);
-      backdrop-filter:blur(15px);
-      box-shadow:0 25px 50px rgba(0,0,0,.5);
-
-      animation:fadeIn 1s ease;
-    }
-
-    @keyframes fadeIn{
-
-      from{
-        opacity:0;
-        transform:translateY(40px);
-      }
-
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
-
-    .icon{
-      font-size:70px;
-      margin-bottom:15px;
-    }
-
-    h1{
-      color:#38bdf8;
-      margin-bottom:10px;
-      font-size:38px;
-      font-weight:900;
-    }
-
-    .subtitle{
-      color:#cbd5e1;
-      margin-bottom:35px;
-      font-size:16px;
-    }
-
-    .input-box{
-      position:relative;
-      margin-bottom:20px;
-    }
-
-    input{
-      width:100%;
-      padding:16px;
-      border:none;
-      border-radius:14px;
-      background:#1e293b;
-      color:white;
-      font-size:16px;
-      outline:none;
-      transition:.3s;
-    }
-
-    input:focus{
-      border:1px solid #38bdf8;
-      box-shadow:0 0 15px rgba(56,189,248,.3);
-    }
-
-    button{
-      width:100%;
-      padding:16px;
-      border:none;
-      border-radius:14px;
-      background:#38bdf8;
-      color:black;
-      font-size:18px;
-      font-weight:bold;
-      cursor:pointer;
-      margin-top:10px;
-      transition:.4s;
-    }
-
-    button:hover{
-      transform:translateY(-4px);
-      box-shadow:0 15px 25px rgba(56,189,248,.4);
-    }
-
-    .back{
-      display:inline-block;
-      margin-top:25px;
-      text-decoration:none;
-      color:#cbd5e1;
-      transition:.3s;
-    }
-
-    .back:hover{
-      color:#38bdf8;
-    }
-
-    @media(max-width:768px){
-
-      .login-box{
-        padding:35px 25px;
-      }
-
-      h1{
-        font-size:30px;
-      }
-
-      .icon{
-        font-size:55px;
-      }
-    }
-
-  </style>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>دخول أمين المكتبة | Librarian</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&amp;display=swap">
+  <link rel="stylesheet" href="login.css">
 </head>
-
-<body>
-
-  <div class="login-box">
-
-    <div class="icon">
-      👨‍💼
+<body class="login-page staff-login">
+  <header class="login-shell login-header">
+    <a class="login-brand" href="index.html"><span aria-hidden="true">L</span> Librarian</a>
+    <a href="index.html">الصفحة الرئيسية <span aria-hidden="true">↖</span></a>
+  </header>
+  <main class="login-shell login-layout">
+    <div class="login-intro">
+      <p class="login-eyebrow">المكتبة الرقمية / الإدارة</p>
+      <h1>دخول أمين المكتبة</h1>
+      <p>سجّل الدخول بحساب أمين المكتبة للوصول إلى أدوات إدارة الكتب والأعضاء.</p>
+      <a class="login-catalog" href="catalog.html">تصفّح كتالوج الكتب <span aria-hidden="true">←</span></a>
     </div>
-
-    <h1>
-      دخول أمين المكتبة
-    </h1>
-
-    <p class="subtitle">
-      قم بتسجيل الدخول لإدارة نظام المكتبة والتحكم الكامل
-    </p>
-
-    <!-- EMAIL -->
-
-    <div class="input-box">
-
-      <input
-      type="email"
-      id="adminEmail"
-      placeholder="الإيميل">
-
-    </div>
-
-    <!-- PASSWORD -->
-
-    <div class="input-box">
-
-      <input
-      type="password"
-      id="adminPassword"
-      placeholder="كلمة المرور">
-
-    </div>
-
-    <!-- LOGIN BUTTON -->
-
-    <button onclick="adminLogin()">
-      تسجيل الدخول
-    </button>
-
-    <!-- BACK -->
-
-    <a href="index.html" class="back">
-      ← العودة للصفحة الرئيسية
-    </a>
-
-  </div>
-
-
-
-  <!-- FIREBASE -->
-
+    <section class="login-card" aria-labelledby="credentials">
+      <div class="login-card-heading">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg>
+        <h2 id="credentials">بيانات الحساب</h2>
+      </div>
+      <form id="login-form">
+        <label for="adminEmail">البريد الإلكتروني</label>
+        <input type="email" id="adminEmail" autocomplete="username" dir="ltr" required>
+        <label for="adminPassword">كلمة المرور</label>
+        <div class="login-password">
+          <input type="password" id="adminPassword" autocomplete="current-password" dir="ltr" required>
+          <button id="toggle-password" type="button" aria-controls="adminPassword" aria-pressed="false" hidden>إظهار</button>
+        </div>
+        
+        <button class="login-submit" type="submit" disabled>تسجيل الدخول</button>
+        <p id="login-status" role="status" aria-atomic="true"></p>
+        <noscript><p>فعّل JavaScript حتى تقدر تسجّل الدخول.</p></noscript>
+      </form>
+      
+    </section>
+  </main>
 <script type="module">
+import { initLogin, showLoginStatus } from "./login-ui.js";
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -254,7 +89,7 @@ const db = getFirestore(app);
 
 // ADMIN LOGIN FUNCTION
 
-window.adminLogin = async function(){
+async function authenticate(){
 
   const email =
   document.getElementById('adminEmail').value;
@@ -265,7 +100,7 @@ window.adminLogin = async function(){
 
   if(!email || !password){
 
-    alert("يرجى تعبئة جميع الحقول");
+    showLoginStatus("يرجى تعبئة جميع الحقول.", "error");
     return;
   }
 
@@ -295,14 +130,14 @@ window.adminLogin = async function(){
 
     if(adminSnap.exists()){
 
-      alert("تم تسجيل دخول أمين المكتبة بنجاح ✅");
+      
 
       window.location.href =
       "admin-dashboard.html";
 
     }else{
 
-      alert("هذا الحساب ليس أمين مكتبة");
+      showLoginStatus("هذا الحساب ما إله صلاحية أمين مكتبة.", "error");
 
     }
 
@@ -310,13 +145,14 @@ window.adminLogin = async function(){
 
   catch(error){
 
-    alert("الإيميل أو كلمة المرور غير صحيحة");
+    showLoginStatus("تعذّر تسجيل الدخول. تأكّد من بريدك وكلمة المرور وحاول مرة ثانية.", "error");
 
   }
 
 }
 
-</script>
 
+initLogin(authenticate);
+</script>
 </body>
 </html>
