@@ -94,10 +94,10 @@ const db = getFirestore(app);
 async function authenticate(){
 
   const email =
-  document.getElementById('loginEmail').value;
+  document.getElementById('studentEmail').value;
 
   const password =
-  document.getElementById('loginPassword').value;
+  document.getElementById('studentPassword').value;
 
 
   if(!email || !password){
@@ -172,7 +172,7 @@ async function authenticate(){
 async function resetPassword(){
 
   const email =
-  document.getElementById("loginEmail").value;
+  document.getElementById("studentEmail").value;
 
   if(!email){
 
