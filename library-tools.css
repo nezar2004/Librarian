@@ -112,3 +112,8 @@
   .reservation-icon { width: 2rem; padding: .45rem; }
   .reservation-hero h1 { font-size: 1.85rem; }
 }
+
+.catalog-page.reservation-embedded { background: transparent; }
+.reservation-embedded .reservation-hero { display: none; }
+.reservation-embedded .reservation-panel:first-of-type { margin-block-start: 0; }
+.reservation-page [hidden] { display: none !important; }

@@ -7,6 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="library-tools.css?v=portal">
 <style>
 
 :root{
@@ -408,11 +409,37 @@ textarea{
   }
 }
 [hidden] { display: none !important; }
-.session-state { margin: 2rem; color: var(--text); }
+.session-state {
+  align-self: center;
+  margin: auto;
+  max-width: min(90vw, 30rem);
+  padding: 1.15rem 1.5rem;
+  border: 1px solid #3b5472;
+  border-radius: 1rem;
+  background: #18283d;
+  color: var(--text);
+}
+.session-state[data-state="pending"]::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-inline-end: .65em;
+  border: 2px solid #7dd3fc;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  vertical-align: -.15em;
+  animation: reservation-spin .8s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .session-state[data-state="pending"]::before { animation: none; }
+}
+.menu a { gap: .5rem; }
+.menu a span { flex: none; }
 </style>
 </head>
 <body>
-<p class="session-state" id="student-session" role="status">جاري التحقق من حساب الطالب…</p>
+<p class="session-state" id="student-session" data-state="pending" role="status">جاري التحقق من حساب الطالب…</p>
 
 <!-- SIDEBAR -->
 
@@ -484,8 +511,8 @@ textarea{
 </li>
 
 <li>
-<a href="reservations.html">
-حجوزات الكتب وقائمة الانتظار
+<a href="reservations.html" class="nav-btn" data-page="reservations-page">
+حجوزات الكتب
 <span aria-hidden="true">📅</span>
 </a>
 </li>
@@ -656,6 +683,10 @@ placeholder="اكتب عنوان الكتاب...">
 
 </div>
 
+<section class="page catalog-page reservation-page reservation-embedded" id="reservations-page">
+  <p id="reservation-status" data-state="pending" role="status" aria-atomic="true">جاري تحميل الحجوزات…</p>
+</section>
+
 </main>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -722,8 +753,17 @@ page.classList.remove('active');
 document.getElementById(pageId)
 .classList.add('active');
 
-pageTitle.innerText =
-this.innerText;
+pageTitle.textContent = this.firstChild.textContent.trim();
+if (pageId === "reservations-page") {
+  const reservationPanel = document.getElementById("reservations-page");
+  import("./reservations.js?v=portal")
+    .then(({ openReservationPanel }) => openReservationPanel(reservationPanel, { app, role: "student" }))
+    .catch(() => {
+      const status = reservationPanel.querySelector("[role=status]");
+      status.dataset.state = "error";
+      status.textContent = "تعذّر فتح الحجوزات. افتح القسم مرة ثانية للمحاولة.";
+    });
+}
 
 });
 
@@ -851,12 +891,14 @@ onAuthStateChanged(auth, async user => {
   studentUid = undefined;
   sidebar.hidden = content.hidden = true;
   session.hidden = false;
+  session.dataset.state = "pending";
   session.textContent = "جاري التحقق من حساب الطالب…";
   if (!user) { location.replace("student_login.html"); return; }
   try {
     const profile = await getDoc(doc(db, "students", user.uid));
     if (version !== sessionVersion) return;
     if (!profile.exists()) {
+      session.dataset.state = "error";
       session.textContent = "ما في ملف طالب مربوط بهالحساب.";
       const back = document.createElement("a");
       back.href = "student_login.html";
@@ -874,10 +916,14 @@ onAuthStateChanged(auth, async user => {
     if (version !== sessionVersion) return;
     if (results.some(result => result.status === "rejected")) {
       session.hidden = false;
+      session.dataset.state = "error";
       session.textContent = "تعذّر تحميل بعض البيانات. حاول تحديث الصفحة.";
     }
   } catch {
-    if (version === sessionVersion) session.textContent = "تعذّر التحقق من ملف الطالب.";
+    if (version === sessionVersion) {
+      session.dataset.state = "error";
+      session.textContent = "تعذّر التحقق من ملف الطالب.";
+    }
   }
 });
 </script>

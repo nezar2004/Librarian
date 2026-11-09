@@ -8,6 +8,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="library-tools.css?v=portal">
 <style>
 :root{
   --main:#38bdf8;
@@ -656,6 +657,11 @@ tr:hover{
 <div class="icon">📥</div>
 </a>
 
+<a href="reservations.html" id="admin-reservations-link" onclick="openPanel(event,'reservations')">
+<span>حجوزات الكتب</span>
+<div class="icon" aria-hidden="true">📅</div>
+</a>
+
 <a href="#" onclick="openPanel(event,'reports')">
 <span>التقارير</span>
 <div class="icon">📊</div>
@@ -814,7 +820,7 @@ tr:hover{
 <div class="box">
 <div class="box-header">
 <h3>إدارة الكتب</h3>
-<a class="btn btn-secondary" href="reservations.html">إدارة حجوزات الكتب</a>
+<button class="btn btn-secondary" type="button" onclick="document.getElementById('admin-reservations-link').click()">إدارة حجوزات الكتب</button>
 <button class="btn btn-primary" onclick="openPanelDirect('add-book')">إضافة كتاب</button>
 </div>
 
@@ -1043,6 +1049,10 @@ tr:hover{
 
 <!-- REPORTS -->
 
+<section class="panel catalog-page reservation-page reservation-embedded" id="reservations">
+  <p id="reservation-status" data-state="pending" role="status" aria-atomic="true">جاري تحميل الحجوزات…</p>
+</section>
+
 <div class="panel" id="reports">
 
 <div class="report-grid">
@@ -1192,10 +1202,22 @@ const titles={
 'students':'قائمة الأعضاء',
 'lend':'إعارة كتاب',
 'return':'استلام كتاب',
-'reports':'التقارير'
+'reports':'التقارير',
+'reservations':'حجوزات الكتب'
 };
 
 document.getElementById('pageTitle').innerText=titles[id];
+
+if (id === 'reservations') {
+  const reservationPanel = document.getElementById("reservations");
+  import("./reservations.js?v=portal")
+    .then(({ openReservationPanel }) => openReservationPanel(reservationPanel, { app, role: "staff" }))
+    .catch(() => {
+      const status = reservationPanel.querySelector("[role=status]");
+      status.dataset.state = "error";
+      status.textContent = "تعذّر فتح الحجوزات. افتح القسم مرة ثانية للمحاولة.";
+    });
+}
 
 }
 

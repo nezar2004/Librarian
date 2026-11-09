@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>حجوزات الكتب | Librarian</title>
-  <link rel="stylesheet" href="library-tools.css?v=reservation-feedback">
+  <link rel="stylesheet" href="library-tools.css?v=portal">
 
 </head>
 <body class="catalog-page reservation-page">
@@ -38,7 +38,9 @@
   </main>
   <noscript><p class="catalog-shell">فعّل JavaScript حتى تقدر تستخدم صفحة الحجوزات.</p></noscript>
   <script type="module">
-    import("./reservations.js?v=feedback").catch(() => {
+    import("./reservations.js?v=portal").then(({ startReservations }) => {
+      startReservations(document.querySelector("main"));
+    }).catch(() => {
       const status = document.querySelector("#reservation-status");
       status.dataset.state = "error";
       status.textContent = "تعذّر تحميل صفحة الحجوزات. تأكّد من الاتصال وحدّث الصفحة.";
