@@ -57,3 +57,20 @@
 @media (max-width: 390px) {
   .login-header { gap: .4rem; flex-wrap: wrap; }
 }
+
+.login-page #login-status[data-state="pending"]::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-inline-end: .45em;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  vertical-align: -.15em;
+  animation: login-spin .8s linear infinite;
+}
+@keyframes login-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .login-page #login-status[data-state="pending"]::before { animation: none; }
+}

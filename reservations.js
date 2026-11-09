@@ -21,6 +21,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const form = document.querySelector("#reservation-form");
+const submitButton = form.querySelector('button[type="submit"]');
 const bookSelect = document.querySelector("#reservation-book");
 const status = document.querySelector("#reservation-status");
 const login = document.querySelector("#reservation-login");
@@ -32,12 +33,33 @@ let current = null;
 let unsubscribe;
 let viewVersion = 0;
 
+function showStatus(message, state = "info") {
+  status.dataset.state = state;
+  status.textContent = message;
+  status.hidden = !message;
+}
+
+function setBusy(button, message) {
+  const original = button.textContent;
+  button.disabled = true;
+  button.setAttribute("aria-busy", "true");
+  button.textContent = message;
+  return () => {
+    button.textContent = original;
+    button.removeAttribute("aria-busy");
+    button.disabled = false;
+  };
+}
+
 function render(snapshot, staff) {
   const entries = snapshot.docs.map(item => ({ ...item.data(), id: item.id }));
   entries.sort((a, b) => (a.createdAt?.seconds ?? 0) - (b.createdAt?.seconds ?? 0));
   results.replaceChildren();
   if (!entries.length) {
-    results.textContent = "ما في طلبات حجز حتى الآن.";
+    const empty = document.createElement("p");
+    empty.className = "reservation-empty";
+    empty.textContent = "ما في طلبات حجز حتى الآن.";
+    results.append(empty);
     return;
   }
   for (const item of entries) {
@@ -46,6 +68,8 @@ function render(snapshot, staff) {
     const title = document.createElement("h3");
     title.textContent = item.bookTitle;
     const state = document.createElement("p");
+    state.className = "reservation-badge";
+    state.dataset.state = item.status;
     state.textContent = labels[item.status] || "حالة غير معروفة";
     card.append(title, state);
     if (staff && item.studentId) {
@@ -63,7 +87,11 @@ function render(snapshot, staff) {
       button.type = "button";
       button.textContent = next === "cancelled" ? "إلغاء الطلب" : labels[next];
       button.addEventListener("click", async () => {
-        button.disabled = true;
+        const restore = setBusy(button, "جاري التحديث…");
+        const others = [...card.querySelectorAll("button")].filter(action => action !== button);
+        others.forEach(action => { action.disabled = true; });
+        const version = viewVersion;
+        showStatus("جاري تحديث حالة الطلب…", "pending");
         try {
           const ref = doc(db, "reservations", item.id);
           await runTransaction(db, async transaction => {
@@ -71,10 +99,12 @@ function render(snapshot, staff) {
             if (!old.exists() || old.data().status !== item.status) throw new Error("تغيّرت حالة الطلب، جرّب مرة ثانية.");
             transaction.update(ref, { status: next, updatedAt: serverTimestamp() });
           });
-          status.textContent = "تم تحديث حالة الطلب.";
+          if (version === viewVersion) showStatus("تم تحديث حالة الطلب.", "success");
         } catch {
-          status.textContent = "تعذّر تحديث الطلب. حدّث الصفحة وجرّب مرة ثانية.";
-          button.disabled = false;
+          if (version === viewVersion) showStatus("تعذّر تحديث الطلب. حدّث الصفحة وجرّب مرة ثانية.", "error");
+        } finally {
+          restore();
+          others.forEach(action => { action.disabled = false; });
         }
       });
       card.append(button);
@@ -90,7 +120,8 @@ onAuthStateChanged(auth, async user => {
   login.hidden = Boolean(user);
   form.hidden = true;
   list.hidden = true;
-  if (!user) { status.textContent = "سجّل الدخول حتى تشوف أو تقدّم طلب حجز."; return; }
+  if (!user) { showStatus("سجّل الدخول حتى تشوف أو تقدّم طلب حجز."); return; }
+  showStatus("جاري التحقق من الحساب…", "pending");
   try {
     const [librarian, student] = await Promise.all([
       getDoc(doc(db, "librarians", user.uid)).catch(() => null),
@@ -99,8 +130,9 @@ onAuthStateChanged(auth, async user => {
     if (version !== viewVersion) return;
     const staff = Boolean(librarian?.exists());
     const studentId = String(student?.data()?.studentId ?? "");
-    if (!staff && !studentId) { status.textContent = "هذا الحساب ما إله ملف طالب أو أمين مكتبة."; return; }
+    if (!staff && !studentId) { showStatus("هذا الحساب ما إله ملف طالب أو أمين مكتبة.", "error"); return; }
     if (!staff) {
+      showStatus("جاري تحميل الكتب المتاحة للحجز…", "pending");
       const books = await getDocs(collection(db, "books"));
       if (version !== viewVersion) return;
       bookSelect.replaceChildren(new Option("اختر كتابًا", ""));
@@ -110,14 +142,24 @@ onAuthStateChanged(auth, async user => {
       form.hidden = false;
     }
     current = { uid: user.uid, staff, studentId };
-    status.textContent = staff ? "الطلبات مرتبة من الأقدم للأحدث. جهّز النسخة قبل تغيير الحالة إلى جاهز." : "";
+    showStatus("جاري تحميل طلبات الحجز…", "pending");
+    let initialSnapshot = true;
     list.hidden = false;
     document.querySelector("#reservation-list-title").textContent = staff ? "قائمة طلبات الحجز" : "طلباتي";
     const ref = collection(db, "reservations");
     unsubscribe = onSnapshot(staff ? ref : query(ref, where("uid", "==", user.uid)),
-      snapshot => render(snapshot, staff), () => { status.textContent = "تعذّر تحميل الطلبات. تحقّق من صلاحيات الحساب."; });
+      snapshot => {
+        if (version !== viewVersion) return;
+        render(snapshot, staff);
+        if (initialSnapshot) {
+          initialSnapshot = false;
+          if (!submitButton.disabled) showStatus(staff ? "الطلبات مرتبة من الأقدم للأحدث. جهّز النسخة قبل تغيير الحالة إلى جاهز." : "");
+        }
+      }, () => {
+        if (version === viewVersion) showStatus("تعذّر تحميل الطلبات. تحقّق من صلاحيات الحساب.", "error");
+      });
   } catch {
-    status.textContent = "تعذّر تحميل صفحة الحجوزات.";
+    if (version === viewVersion) showStatus("تعذّر تحميل صفحة الحجوزات. حدّث الصفحة وجرّب مرة ثانية.", "error");
   }
 });
 
@@ -125,9 +167,9 @@ form.addEventListener("submit", async event => {
   event.preventDefault();
   const bookId = bookSelect.value;
   const account = current;
-  if (!bookId || !account || account.staff) return;
-  const button = event.submitter;
-  button.disabled = true;
+  if (!bookId || !account || account.staff || submitButton.disabled) return;
+  const restore = setBusy(submitButton, "جاري إرسال الطلب…");
+  showStatus("جاري حفظ طلب الحجز…", "pending");
   try {
     const request = doc(db, "reservations", account.uid + "_" + bookId);
     const bookRef = doc(db, "books", bookId);
@@ -140,10 +182,10 @@ form.addEventListener("submit", async event => {
       transaction.set(request, { uid: account.uid, studentId: account.studentId, bookId, bookTitle: data.title, status: state, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
       return state;
     });
-    status.textContent = next === "waiting" ? "انضاف طلبك لقائمة الانتظار." : "تم إرسال طلب الحجز.";
+    if (current === account) showStatus(next === "waiting" ? "انضاف طلبك لقائمة الانتظار." : "تم إرسال طلب الحجز.", "success");
   } catch (error) {
-    status.textContent = error.code ? "تعذّر إرسال الطلب. تحقّق من صلاحيات حسابك." : error.message;
+    if (current === account) showStatus(error.code ? "تعذّر إرسال الطلب. تحقّق من صلاحيات حسابك." : error.message, "error");
   } finally {
-    button.disabled = false;
+    restore();
   }
 });
