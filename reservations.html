@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>حجوزات الكتب | Librarian</title>
+  <link rel="stylesheet" href="library-tools.css">
+  <script type="module" src="reservations.js"></script>
+</head>
+<body class="catalog-page">
+  <header class="catalog-shell catalog-header"><a href="catalog.html">كتالوج الكتب</a><a href="index.html">Librarian</a></header>
+  <main class="catalog-shell">
+    <p class="catalog-kicker">المكتبة الرقمية</p>
+    <h1>حجوزات الكتب</h1>
+    <p id="reservation-status" role="status">جاري التحقق من الحساب…</p>
+    <div id="reservation-login" hidden><a href="student_login.html">دخول الطالب</a> · <a href="admin_login.html">دخول أمين المكتبة</a></div>
+    <form id="reservation-form" hidden>
+      <p>إذا الكتاب غير متاح، بينضاف طلبك لقائمة الانتظار. أمين المكتبة بحدّد متى النسخة جاهزة للاستلام.</p>
+      <div class="catalog-filters">
+        <label>الكتاب <select id="reservation-book" required><option value="">اختر كتابًا</option></select></label>
+      </div>
+      <button type="submit">إرسال الطلب</button>
+    </form>
+    <section id="reservation-list" hidden>
+      <h2 id="reservation-list-title">طلباتي</h2>
+      <div id="reservation-results" class="catalog-grid"></div>
+    </section>
+  </main>
+</body>
+</html>

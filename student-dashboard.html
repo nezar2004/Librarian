@@ -407,13 +407,16 @@ textarea{
     margin-right:0;
   }
 }
+[hidden] { display: none !important; }
+.session-state { margin: 2rem; color: var(--text); }
 </style>
 </head>
 <body>
+<p class="session-state" id="student-session" role="status">جاري التحقق من حساب الطالب…</p>
 
 <!-- SIDEBAR -->
 
-<aside class="sidebar" tabindex="0" aria-label="قائمة بوابة الطالب">
+<aside hidden class="sidebar" tabindex="0" aria-label="قائمة بوابة الطالب">
 
 <div>
 
@@ -484,13 +487,14 @@ textarea{
 
 </div>
 
+<a class="nav-btn" href="reservations.html">حجوزات الكتب وقائمة الانتظار</a>
 <button class="logout">تسجيل الخروج</button>
 
 </aside>
 
 <!-- CONTENT -->
 
-<main class="content">
+<main hidden class="content">
 
 <div class="topbar">
 
@@ -610,13 +614,12 @@ placeholder="اكتب عنوان الكتاب...">
 
 </select>
 
-<textarea placeholder="أي ملاحظات تريد إبلاغ المكتبة بها..."></textarea>
-
 <button class="confirm-btn" id="confirm-return">
 
 تأكيد الإرجاع
 
 </button>
+<p id="return-status" role="status"></p>
 
 </div>
 
@@ -649,23 +652,11 @@ placeholder="اكتب عنوان الكتاب...">
 
 </main>
 <script type="module">
-
-/* ================= FIREBASE ================= */
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-getDocs,
-query,
-where,
-updateDoc,
-doc,
-addDoc
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { returnLoan } from "./library-loans.js";
+import { normalizeText, normalizeISBN, shelfLabel } from "./book-tools.js";
 
 const firebaseConfig = {
 
@@ -682,38 +673,21 @@ messagingSenderId: "429556863392",
 appId: "1:429556863392:web:1cffe618fd87b6606914c5"
 
 };
-
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
-
-/* ================= STUDENT ================= */
-
-const studentName =
-localStorage.getItem("studentName");
-
-const studentId =
-localStorage.getItem("studentId");
-
-if(studentName && studentId){
-
-document.getElementById("student-info").innerText =
-studentName + " — " + studentId;
-
-document.getElementById("welcome-text").innerText =
-"مرحباً " + studentName;
-
-}else{
-
-document.getElementById("student-info").innerText =
-"طالب غير معروف";
-
-}
+const auth = getAuth(app);
+const session = document.getElementById("student-session");
+const sidebar = document.querySelector(".sidebar");
+const content = document.querySelector("main");
+const returnSelect = document.getElementById("return-select");
+const returnStatus = document.getElementById("return-status");
+let studentUid;
+let sessionVersion = 0;
 
 /* ================= NAVIGATION ================= */
 
 const navButtons =
-document.querySelectorAll('.nav-btn');
+document.querySelectorAll('.nav-btn[data-page]');
 
 const pages =
 document.querySelectorAll('.page');
@@ -749,364 +723,157 @@ this.innerText;
 
 });
 
-/* ================= LOAD BOOKS ================= */
 
-async function loadBooks(){
-
-const booksContainer =
-document.getElementById("books-container");
-
-const browseContainer =
-document.getElementById("browse-container");
-
-booksContainer.innerHTML='';
-browseContainer.innerHTML='';
-
-const snapshot =
-await getDocs(collection(db,"books"));
-
-snapshot.forEach((docSnap)=>{
-
-const book = docSnap.data();
-
-const card = `
-
-<div class="book-card">
-
-<div class="book-image book1">
-📘
-</div>
-
-<div class="book-content">
-
-<h3>${book.title}</h3>
-
-<div class="author">
-${book.author}
-</div>
-
-<div class="status">
-متوفر (${book.available})
-</div>
-
-</div>
-
-</div>
-
-`;
-
-booksContainer.innerHTML += card;
-
-browseContainer.innerHTML += card;
-
-});
-
+function cell(row, value) {
+  const td = row.insertCell();
+  td.textContent = value ?? "—";
+  return td;
 }
 
-/* ================= SEARCH ================= */
-
-const searchInput =
-document.getElementById("search-input");
-
-searchInput.addEventListener('keyup',function(){
-
-const value =
-this.value.toLowerCase();
-
-const books =
-document.querySelectorAll('.book-card');
-
-books.forEach(book=>{
-
-const title =
-book.querySelector('h3')
-.innerText
-.toLowerCase();
-
-book.style.display =
-title.includes(value)
-? 'block'
-: 'none';
-
-});
-
-});
-
-/* ================= BORROWED BOOKS ================= */
-
-async function loadBorrowedBooks(){
-
-const table =
-document.getElementById("borrowed-table");
-
-const returnSelect =
-document.getElementById("return-select");
-
-table.innerHTML = `
-
-<tr>
-<th>الكتاب</th>
-<th>تاريخ الاستعارة</th>
-<th>الحالة</th>
-<th>إجراء</th>
-</tr>
-
-`;
-
-returnSelect.innerHTML='';
-
-const q = query(
-collection(db,"borrows"),
-where("studentId","==",studentId),
-where("status","==","borrowed")
-);
-
-const snapshot =
-await getDocs(q);
-
-let count = 0;
-
-snapshot.forEach((docSnap)=>{
-
-count++;
-
-const borrow = docSnap.data();
-
-table.innerHTML += `
-
-<tr>
-
-<td>${borrow.bookTitle}</td>
-
-<td>${borrow.borrowDate}</td>
-
-<td>مستعار</td>
-
-<td>
-
-<button
-class="return-btn"
-onclick="selectReturnBook('${borrow.bookId}')">
-
-إرجاع
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-returnSelect.innerHTML += `
-
-<option value="${borrow.bookId}">
-${borrow.bookTitle}
-</option>
-
-`;
-
-});
-
-document.getElementById("borrowed-count")
-.innerText =
-count + " كتب مستعارة";
-
+async function loadBooks(uid) {
+  const snapshot = await getDocs(collection(db, "books"));
+  if (studentUid !== uid) return;
+  const containers = ["books-container", "browse-container"].map(id => document.getElementById(id));
+  for (const container of containers) container.replaceChildren();
+  for (const item of snapshot.docs) {
+    const book = item.data();
+    const card = document.createElement("article");
+    card.className = "book-card";
+    card.dataset.search = normalizeText([book.title, book.author].filter(Boolean).join(" "));
+    card.dataset.isbn = normalizeISBN(book.isbn);
+    const body = document.createElement("div");
+    body.className = "book-content";
+    for (const [tag, value] of [["h3", book.title], ["p", book.author], ["p", "متوفر (" + (book.available ?? "—") + ")"], ["p", shelfLabel(book)]]) {
+      const el = document.createElement(tag);
+      el.textContent = value || "—";
+      body.append(el);
+    }
+    card.append(body);
+    for (const container of containers) container.append(card.cloneNode(true));
+  }
 }
 
-/* ================= HISTORY ================= */
-
-/* ================= HISTORY ================= */
-
-async function loadHistory(){
-
-const table =
-document.getElementById("history-table");
-
-table.innerHTML = `
-
-<tr>
-<th>الكتاب</th>
-<th>تاريخ الاستعارة</th>
-<th>تاريخ الإرجاع</th>
-<th>الحالة</th>
-</tr>
-
-`;
-
-const q = query(
-collection(db,"borrows"),
-where("studentId","==",studentId)
-);
-
-const snapshot =
-await getDocs(q);
-
-snapshot.forEach((docSnap)=>{
-
-const data = docSnap.data();
-
-table.innerHTML += `
-
-<tr>
-
-<td>${data.bookTitle}</td>
-
-<td>${data.borrowDate || '-'}</td>
-
-<td>${data.returnDate || 'لم يتم الإرجاع بعد'}</td>
-
-<td>
-${data.returned ? 'تم الإرجاع' : 'مستعار'}
-</td>
-
-</tr>
-
-`;
-
+document.getElementById("search-input").addEventListener("input", event => {
+  const value = normalizeText(event.target.value);
+  const isbn = normalizeISBN(value);
+  for (const card of document.querySelectorAll("#books-container .book-card")) {
+    card.hidden = !card.dataset.search.includes(value) && !(isbn && card.dataset.isbn.includes(isbn));
+  }
 });
 
+function formatDate(value) {
+  if (value?.toDate) return value.toDate().toLocaleDateString("ar-JO");
+  return value || "—";
 }
 
-/* ================= SELECT RETURN ================= */
-
-window.selectReturnBook = function(bookId){
-
-document.getElementById("return-page")
-.classList.add("active");
-
-pages.forEach(page=>{
-
-if(page.id !== "return-page"){
-
-page.classList.remove("active");
-
+async function loadLoans(uid) {
+  const snapshot = await getDocs(query(collection(db, "borrows"), where("studentUid", "==", uid)));
+  if (studentUid !== uid) return;
+  const activeTable = document.getElementById("borrowed-table");
+  const history = document.getElementById("history-table");
+  activeTable.innerHTML = "<tr><th>الكتاب</th><th>تاريخ الاستعارة</th><th>الحالة</th><th>إجراء</th></tr>";
+  history.innerHTML = "<tr><th>الكتاب</th><th>تاريخ الاستعارة</th><th>تاريخ الإرجاع</th><th>الحالة</th></tr>";
+  returnSelect.replaceChildren(new Option("اختر الإعارة", ""));
+  let count = 0;
+  for (const item of snapshot.docs) {
+    const loan = item.data();
+    const borrowed = formatDate(loan.issueDate || loan.borrowDate);
+    const returned = loan.status === "returned" || loan.returned === true;
+    const row = history.insertRow();
+    cell(row, loan.bookTitle);
+    cell(row, borrowed);
+    cell(row, returned ? formatDate(loan.returnedAt || loan.returnDate) : "—");
+    cell(row, returned ? "تم الإرجاع" : "مستعار");
+    if (loan.status !== "borrowed") continue;
+    count++;
+    const active = activeTable.insertRow();
+    cell(active, loan.bookTitle);
+    cell(active, borrowed);
+    cell(active, "مستعار");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "return-btn";
+    btn.textContent = "إرجاع";
+    btn.addEventListener("click", () => {
+      document.querySelector('[data-page="return-page"]').click();
+      returnSelect.value = item.id;
+      returnSelect.focus();
+    });
+    cell(active, "").append(btn);
+    returnSelect.add(new Option((loan.bookTitle || "كتاب") + " — " + borrowed, item.id));
+  }
+  document.getElementById("borrowed-count").textContent = count + " كتب مستعارة";
 }
 
+document.getElementById("confirm-return").addEventListener("click", async event => {
+  const loanId = returnSelect.value;
+  const uid = studentUid;
+  if (!loanId || !uid) { returnStatus.textContent = "اختر إعارة أولًا."; return; }
+  const button = event.currentTarget;
+  if (button.disabled) return;
+  button.disabled = true;
+  returnStatus.textContent = "جاري تسجيل الإرجاع…";
+  try {
+    await returnLoan(db, loanId, uid);
+    returnStatus.textContent = "تم تسجيل إرجاع الكتاب.";
+    const updates = await Promise.allSettled([loadLoans(uid), loadBooks(uid)]);
+    if (updates.some(update => update.status === "rejected")) {
+      returnStatus.textContent = "تم تسجيل الإرجاع. حدّث الصفحة لعرض الحالة الجديدة.";
+    }
+  } catch (error) {
+    returnStatus.textContent = error.code ? "تعذّر تسجيل الإرجاع. تواصل مع أمين المكتبة." : error.message;
+  } finally {
+    button.disabled = false;
+  }
 });
 
-document.getElementById("return-select")
-.value = bookId;
-
-}
-
-/* ================= RETURN BOOK ================= */
-
-document.getElementById("confirm-return")
-.addEventListener("click",async()=>{
-
-const bookId =
-document.getElementById("return-select").value;
-
-if(bookId===''){
-
-alert("اختر كتاب");
-
-return;
-
-}
-
-const q = query(
-collection(db,"borrows"),
-where("studentId","==",studentId),
-where("bookId","==",bookId),
-where("status","==","borrowed")
-);
-
-const snapshot =
-await getDocs(q);
-
-if(snapshot.empty){
-
-alert("لا يوجد كتاب");
-
-return;
-
-}
-
-snapshot.forEach(async(d)=>{
-
-await updateDoc(doc(db,"borrows",d.id),{
-
-status:"returned",
-returned:true,
-returnDate:new Date().toISOString().split('T')[0]
-
+document.querySelector(".logout").addEventListener("click", async () => {
+  if (!confirm("هل تريد تسجيل الخروج؟")) return;
+  try {
+    await signOut(auth);
+    localStorage.removeItem("studentName");
+    localStorage.removeItem("studentId");
+    location.replace("student_login.html");
+  } catch {
+    session.hidden = false;
+    session.textContent = "تعذّر تسجيل الخروج. حاول مرة ثانية.";
+  }
 });
 
+onAuthStateChanged(auth, async user => {
+  const version = ++sessionVersion;
+  studentUid = undefined;
+  sidebar.hidden = content.hidden = true;
+  session.hidden = false;
+  session.textContent = "جاري التحقق من حساب الطالب…";
+  if (!user) { location.replace("student_login.html"); return; }
+  try {
+    const profile = await getDoc(doc(db, "students", user.uid));
+    if (version !== sessionVersion) return;
+    if (!profile.exists()) {
+      session.textContent = "ما في ملف طالب مربوط بهالحساب.";
+      const back = document.createElement("a");
+      back.href = "student_login.html";
+      back.textContent = " العودة لتسجيل الدخول";
+      session.append(back);
+      return;
+    }
+    const student = profile.data();
+    studentUid = user.uid;
+    document.getElementById("student-info").textContent = [student.name, student.studentId].filter(Boolean).join(" — ");
+    document.getElementById("welcome-text").textContent = "مرحباً " + (student.name || "");
+    sidebar.hidden = content.hidden = false;
+    session.hidden = true;
+    const results = await Promise.allSettled([loadBooks(user.uid), loadLoans(user.uid)]);
+    if (version !== sessionVersion) return;
+    if (results.some(result => result.status === "rejected")) {
+      session.hidden = false;
+      session.textContent = "تعذّر تحميل بعض البيانات. حاول تحديث الصفحة.";
+    }
+  } catch {
+    if (version === sessionVersion) session.textContent = "تعذّر التحقق من ملف الطالب.";
+  }
 });
-
-/* تحديث عدد النسخ */
-
-const booksSnapshot =
-await getDocs(collection(db,"books"));
-
-booksSnapshot.forEach(async(book)=>{
-
-if(book.id===bookId){
-
-const data = book.data();
-
-await updateDoc(
-doc(db,"books",bookId),
-{
-available:data.available + 1
-}
-);
-
-}
-
-});
-
-/* إضافة سجل */
-
-await addDoc(collection(db,"returns"),{
-
-studentId,
-bookId,
-date:new Date()
-
-});
-
-alert("تم إرجاع الكتاب");
-
-loadBorrowedBooks();
-
-loadHistory();
-
-loadBooks();
-
-});
-
-/* ================= LOGOUT ================= */
-
-document.querySelector('.logout')
-.addEventListener('click',()=>{
-
-const confirmLogout =
-confirm('هل تريد تسجيل الخروج؟');
-
-if(confirmLogout){
-
-localStorage.removeItem("studentName");
-
-localStorage.removeItem("studentId");
-
-window.location.href =
-'student_login.html';
-
-}
-
-});
-
-/* ================= START ================= */
-
-loadBooks();
-
-loadBorrowedBooks();
-
-loadHistory();
-
 </script>
 </body>
 </html>
