@@ -814,6 +814,7 @@ tr:hover{
 <div class="box">
 <div class="box-header">
 <h3>إدارة الكتب</h3>
+<a class="btn btn-secondary" href="reservations.html">إدارة حجوزات الكتب</a>
 <button class="btn btn-primary" onclick="openPanelDirect('add-book')">إضافة كتاب</button>
 </div>
 
@@ -963,6 +964,8 @@ tr:hover{
 <div class="input-group">
 <label>الرقم الجامعي للطالب</label>
 <input type="text" id="lendStudent">
+</div>
+<div class="input-group"><label for="lendAccount">ربط الإعارة بحساب طالب</label><select id="lendAccount"><option value="">اختر حساب الطالب بعد التحقق من هويته</option></select>
 </div>
 
 <div class="input-group">
@@ -1144,6 +1147,7 @@ appId: "1:429556863392:web:1cffe618fd87b6606914c5"
 };
 
 import { initBookAdmin, requireLibrarian } from "./book-admin.js";
+import { lendBook, returnLoan } from "./library-loans.js";
 import { safeBookText } from "./book-tools.js";
 
 const app = initializeApp(firebaseConfig);
@@ -1458,160 +1462,87 @@ ${book.title}
 
 /* ================= BORROW BOOK ================= */
 
+const lendAccount = document.getElementById("lendAccount");
+const accountRecords = new Map();
+let accountsLoaded = false;
+
+lendAccount.addEventListener("focus", async () => {
+  if (accountsLoaded) return;
+  try {
+    await requireLibrarian(app, db);
+    const profiles = await getDocs(collection(db, "students"));
+    if (accountsLoaded) return;
+    accountsLoaded = true;
+    for (const item of profiles.docs) {
+      const member = item.data();
+      if (member.uid !== item.id || !member.studentId) continue;
+      const label = [member.name, member.studentId, member.email].filter(Boolean).join(" — ");
+      accountRecords.set(item.id, member);
+      lendAccount.add(new Option(label, item.id));
+    }
+  } catch {
+    // Existing manual member lookup is still available to staff.
+  }
+});
+
+lendAccount.addEventListener("change", () => {
+  const member = accountRecords.get(lendAccount.value);
+  if (member) document.getElementById("lendStudent").value = String(member.studentId);
+});
+
+let lending = false;
 window.lendBookNow = async function(){
-
-const studentId=document.getElementById('lendStudent').value;
-const bookId=document.getElementById('lendBook').value;
-const issueDate=document.getElementById('lendDate').value;
-const returnDate=document.getElementById('returnDate').value;
-
-if(studentId===''){
-alert('أدخل رقم الطالب');
-return;
-}
-
-const bookRef = doc(db,"books",bookId);
-
-const booksSnapshot = await getDocs(collection(db,"books"));
-
-let selectedBook = null;
-
-booksSnapshot.forEach((b)=>{
-
-if(b.id===bookId){
-selectedBook = {
-id:b.id,
-...b.data()
+  if (lending) return;
+  const studentId = document.getElementById("lendStudent").value.trim();
+  const studentUid = lendAccount.value;
+  const account = accountRecords.get(studentUid);
+  const bookId = document.getElementById("lendBook").value;
+  const issueDate = document.getElementById("lendDate").value;
+  const returnDate = document.getElementById("returnDate").value;
+  if (!studentId || !bookId || !issueDate || !returnDate || returnDate < issueDate) {
+    alert("تأكّد من رقم الطالب والكتاب وتواريخ الإعارة.");
+    return;
+  }
+  if (studentUid && String(account?.studentId) !== studentId) {
+    alert("رقم الطالب لا يطابق الحساب المختار.");
+    return;
+  }
+  lending = true;
+  try {
+    await requireLibrarian(app, db);
+    await lendBook(db, bookId, { studentId, ...(studentUid ? { studentUid } : {}) }, { issueDate, returnDate });
+    alert("تم تسجيل الإعارة.");
+    void Promise.all([renderBooks(), updateCounters(), loadTodayActivities()]).catch(console.error);
+  } catch (error) {
+    alert(error.code ? "تعذّر تسجيل الإعارة." : error.message);
+  } finally {
+    lending = false;
+  }
 };
-}
 
-});
-
-if(selectedBook.available <= 0){
-
-alert('الكتاب غير متوفر');
-
-return;
-
-}
-
-/* حفظ الإعارة */
-
-await addDoc(collection(db,"borrows"),{
-
-studentId,
-bookId,
-bookTitle:selectedBook.title,
-issueDate,
-returnDate,
-status:'borrowed',
-createdAt:new Date()
-
-});
-
-/* تحديث عدد النسخ */
-
-await updateDoc(bookRef,{
-available:selectedBook.available - 1
-});
-
-/* إضافة نشاط اليوم */
-
-await addDoc(collection(db,"activities"),{
-
-studentId,
-bookTitle:selectedBook.title,
-action:'استعارة',
-status:'مستعار',
-date:new Date().toLocaleDateString('ar-EG'),
-createdAt:new Date()
-
-});
-
-alert('تمت الإعارة بنجاح');
-
-renderBooks();
-
-updateCounters();
-
-loadTodayActivities();
-
-}
-
-/* ================= RETURN BOOK ================= */
-
+let receiving = false;
 window.receiveBook = async function(){
-
-const studentId=document.getElementById('returnStudent').value;
-const bookId=document.getElementById('returnBook').value;
-
-const borrowsRef = collection(db,"borrows");
-
-const q = query(
-borrowsRef,
-where("studentId","==",studentId),
-where("bookId","==",bookId),
-where("status","==","borrowed")
-);
-
-const borrowSnapshot = await getDocs(q);
-
-if(borrowSnapshot.empty){
-
-alert('لا يوجد استعارة لهذا الطالب');
-
-return;
-
-}
-
-let borrowDocId='';
-
-borrowSnapshot.forEach((d)=>{
-borrowDocId = d.id;
-});
-
-/* تحديث حالة الإعارة */
-
-await updateDoc(doc(db,"borrows",borrowDocId),{
-status:'returned'
-});
-
-/* زيادة النسخ المتوفرة */
-
-const booksSnapshot = await getDocs(collection(db,"books"));
-
-booksSnapshot.forEach(async(book)=>{
-
-if(book.id===bookId){
-
-const data = book.data();
-
-await updateDoc(doc(db,"books",bookId),{
-available:data.available + 1
-});
-
-}
-
-});
-
-/* حفظ المرتجع */
-
-await addDoc(collection(db,"returns"),{
-
-studentId,
-bookId,
-returnDate:new Date(),
-createdAt:new Date()
-
-});
-
-alert('تم استلام الكتاب');
-
-renderBooks();
-
-updateCounters();
-
-}
+  if (receiving) return;
+  const studentId = document.getElementById("returnStudent").value.trim();
+  const bookId = document.getElementById("returnBook").value;
+  if (!studentId || !bookId) { alert("اختر الطالب والكتاب."); return; }
+  receiving = true;
+  try {
+    await requireLibrarian(app, db);
+    const snapshot = await getDocs(query(collection(db, "borrows"),
+      where("studentId", "==", studentId), where("bookId", "==", bookId), where("status", "==", "borrowed")));
+    if (snapshot.empty) { alert("لا يوجد سجل إعارة مفتوح لهذا الكتاب."); return; }
+    const loans = [...snapshot.docs].sort((a, b) =>
+      String(a.data().issueDate ?? "").localeCompare(String(b.data().issueDate ?? "")) || a.id.localeCompare(b.id));
+    await returnLoan(db, loans[0].id);
+    alert("تم تسجيل إرجاع نسخة واحدة.");
+    void Promise.all([renderBooks(), updateCounters(), loadTodayActivities()]).catch(console.error);
+  } catch (error) {
+    alert(error.code ? "تعذّر تسجيل الإرجاع." : error.message);
+  } finally {
+    receiving = false;
+  }
+};
 
 /* ================= COUNTERS ================= */
 

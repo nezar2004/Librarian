@@ -49,6 +49,7 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
   getAuth,
+  signOut,
   signInWithEmailAndPassword,
   sendPasswordResetEmail
 }
@@ -130,28 +131,11 @@ async function authenticate(){
     await getDoc(studentRef);
 
 
-    if(studentSnap.exists()){
-
-      const studentData =
-      studentSnap.data();
-
-      // تخزين البيانات
-
-      localStorage.setItem(
-        "studentName",
-        studentData.name
-      );
-
-      localStorage.setItem(
-        "studentId",
-        studentData.studentId
-      );
-
+    if (!studentSnap.exists()) {
+      await signOut(auth);
+      showLoginStatus("ما في ملف طالب مربوط بهالحساب.", "error");
+      return;
     }
-
-
-    
-
 
     // التحويل للبوابة
 

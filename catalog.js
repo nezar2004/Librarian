@@ -65,6 +65,10 @@ function render() {
     const shelf = [[translate("الطابق", "Floor"), book.floor], [translate("القسم", "Section"), book.section], [translate("الرف", "Shelf"), book.shelf]]
       .filter(([, value]) => String(value ?? "").trim()).map(([label, value]) => label + ": " + value);
     addText(card, "p", shelf.join(" · ") || translate("موقع الرف غير محدد", "Shelf location not listed"), "catalog-shelf");
+    const request = document.createElement("a");
+    request.href = "reservations.html?book=" + encodeURIComponent(book.id);
+    request.textContent = translate(count > 0 ? "اطلب حجز نسخة" : "انضم لقائمة الانتظار", count > 0 ? "Request a copy" : "Join the waiting list");
+    card.append(request);
     results.append(card);
   }
   status.textContent = filtered.length ? translate("عدد النتائج: ", "Results: ") + number.format(filtered.length) : translate("ما في كتب بتطابق البحث.", "No books match your search.");
@@ -74,7 +78,7 @@ function resetPage() { shown = pageSize; render(); }
 document.addEventListener("library:language", render);
 try {
   const snapshot = await getDocs(collection(db, "books"));
-  books = snapshot.docs.map(item => item.data()).sort((a, b) => String(a.title ?? "").localeCompare(String(b.title ?? ""), "ar"));
+  books = snapshot.docs.map(item => ({ ...item.data(), id: item.id })).sort((a, b) => String(a.title ?? "").localeCompare(String(b.title ?? ""), "ar"));
   loadState = "ready";
   search.addEventListener("input", resetPage);
   availability.addEventListener("change", resetPage);
