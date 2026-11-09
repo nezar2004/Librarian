@@ -59,11 +59,11 @@ body{
   flex-direction:column;
   justify-content:space-between;
   position:fixed;
-  right:0;
+  inset-inline-start:0;
   top:0;
   height:100%;
   overflow-y:auto;
-  border-left:1px solid var(--border);
+  border-inline-end:1px solid var(--border);
   backdrop-filter:blur(12px);
 }
 
@@ -175,7 +175,7 @@ body{
 
 .content{
   width:calc(100% - 300px);
-  margin-right:300px;
+  margin-inline-start:300px;
   padding:35px;
 }
 
@@ -405,7 +405,7 @@ textarea{
 
   .content{
     width:100%;
-    margin-right:0;
+    margin-inline-start:0;
   }
 }
 [hidden] { display: none !important; }
@@ -436,9 +436,17 @@ textarea{
 }
 .menu a { gap: .5rem; }
 .menu a span { flex: none; }
+
+.portal-language {
+  min-height: 44px; padding: .45rem .9rem; margin-block: .5rem;
+  border: 1px solid #45627a; border-radius: .7rem;
+  color: #a8e5ff; background: #18283d; font: inherit; cursor: pointer;
+}
+.portal-language:hover { background: #253e56; }
+.portal-language:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 3px; }
 </style>
 </head>
-<body>
+<body data-localize-live>
 <p class="session-state" id="student-session" data-state="pending" role="status">جاري التحقق من حساب الطالب…</p>
 
 <!-- SIDEBAR -->
@@ -459,12 +467,13 @@ textarea{
 <div class="student-card">
 <h3>طالب</h3>
 
-<p id="student-info">
+<p id="student-info" data-no-translate>
 جاري التحميل...
 </p>
 
 </div>
 
+<button type="button" id="library-language" class="portal-language" lang="en" hidden>English</button>
 <div class="menu-title">الاستكشاف</div>
 
 <ul class="menu">
@@ -689,6 +698,7 @@ placeholder="اكتب عنوان الكتاب...">
 
 </main>
 <script type="module">
+import { translate, languageCode } from "./library-language.js?v=portal-en";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -753,7 +763,12 @@ page.classList.remove('active');
 document.getElementById(pageId)
 .classList.add('active');
 
-pageTitle.textContent = this.firstChild.textContent.trim();
+const titles = {
+  "search-page": "البحث عن كتب", "browse-page": "تصفح الكتب",
+  "borrowed-page": "كتبي المستعارة", "return-page": "إرجاع كتاب",
+  "history-page": "سجل الاستعارات", "reservations-page": "حجوزات الكتب"
+};
+pageTitle.textContent = titles[pageId];
 if (pageId === "reservations-page") {
   const reservationPanel = document.getElementById("reservations-page");
   import("./reservations.js?v=portal")
@@ -808,7 +823,7 @@ document.getElementById("search-input").addEventListener("input", event => {
 });
 
 function formatDate(value) {
-  if (value?.toDate) return value.toDate().toLocaleDateString("ar-JO");
+  if (value?.toDate) return value.toDate().toLocaleDateString(languageCode() === "en" ? "en-GB" : "ar-JO");
   return value || "—";
 }
 
@@ -874,7 +889,7 @@ document.getElementById("confirm-return").addEventListener("click", async event 
 });
 
 document.querySelector(".logout").addEventListener("click", async () => {
-  if (!confirm("هل تريد تسجيل الخروج؟")) return;
+  if (!confirm(translate("هل تريد تسجيل الخروج؟"))) return;
   try {
     await signOut(auth);
     localStorage.removeItem("studentName");

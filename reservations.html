@@ -4,12 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>حجوزات الكتب | Librarian</title>
-  <link rel="stylesheet" href="library-tools.css?v=portal">
+  <link rel="stylesheet" href="library-tools.css?v=reservation-feedback">
 
+<style>
+.portal-language {
+  min-height: 44px; padding: .45rem .9rem; margin-block: .5rem;
+  border: 1px solid #45627a; border-radius: .7rem;
+  color: #a8e5ff; background: #18283d; font: inherit; cursor: pointer;
+}
+.portal-language:hover { background: #253e56; }
+.portal-language:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 3px; }
+</style>
 </head>
-<body class="catalog-page reservation-page">
+<body class="catalog-page reservation-page" data-localize-live>
   <header class="catalog-shell catalog-header">
     <a class="reservation-brand" href="index.html">Librarian</a>
+    <button type="button" id="library-language" class="portal-language" lang="en" hidden>English</button>
     <a class="reservation-catalog" href="catalog.html">تصفّح الكتب</a>
   </header>
   <main class="catalog-shell">
@@ -38,9 +48,8 @@
   </main>
   <noscript><p class="catalog-shell">فعّل JavaScript حتى تقدر تستخدم صفحة الحجوزات.</p></noscript>
   <script type="module">
-    import("./reservations.js?v=portal").then(({ startReservations }) => {
-      startReservations(document.querySelector("main"));
-    }).catch(() => {
+    import "./library-language.js?v=portal-en";
+    import("./reservations.js?v=feedback").catch(() => {
       const status = document.querySelector("#reservation-status");
       status.dataset.state = "error";
       status.textContent = "تعذّر تحميل صفحة الحجوزات. تأكّد من الاتصال وحدّث الصفحة.";

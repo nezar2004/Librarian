@@ -63,13 +63,13 @@ body{
   background-size:40px 40px;
   height:100vh;
   position:fixed;
-  right:0;
+  inset-inline-start:0;
   top:0;
   padding:18px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  border-left:1px solid var(--border);
+  border-inline-end:1px solid var(--border);
   backdrop-filter:blur(12px);
   overflow-y:auto;
 }
@@ -185,7 +185,7 @@ body{
 
 .main{
   flex:1;
-  margin-right:260px;
+  margin-inline-start:260px;
   padding:28px;
   width:calc(100% - 260px);
 }
@@ -465,13 +465,13 @@ tr:hover{
 }
 
 .search input{
-  padding-right:50px;
+  padding-inline-start:50px;
   background:var(--bg-light);
 }
 
 .search span{
   position:absolute;
-  right:18px;
+  inset-inline-end:18px;
   top:50%;
   transform:translateY(-50%);
   color:var(--main);
@@ -524,12 +524,12 @@ tr:hover{
     height:auto;
     position:relative;
     padding:15px;
-    border-left:none;
+    border-inline-end:none;
     border-bottom:1px solid var(--border);
   }
 
   .main{
-    margin-right:0;
+    margin-inline-start:0;
     width:100%;
     padding:15px;
   }
@@ -592,10 +592,20 @@ tr:hover{
 .sidebar::-webkit-scrollbar{
   display:none;
 }
+
+.portal-language {
+  min-height: 44px; padding: .45rem .9rem; margin-block: .5rem;
+  border: 1px solid #45627a; border-radius: .7rem;
+  color: #a8e5ff; background: #18283d; font: inherit; cursor: pointer;
+}
+.portal-language:hover { background: #253e56; }
+.portal-language:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 3px; }
+.admin-shortcuts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: .75rem; margin-block-start: 1rem; }
+.admin-shortcuts .btn { min-height: 44px; }
 </style>
 <link rel="stylesheet" href="library-tools.css">
 </head>
-<body>
+<body data-localize-live>
 
 <!-- SIDEBAR -->
 
@@ -616,6 +626,7 @@ tr:hover{
 <p>admin</p>
 </div>
 
+<button type="button" id="library-language" class="portal-language" lang="en" hidden>English</button>
 <div class="menu-title">الرئيسية</div>
 
 <div class="menu">
@@ -623,6 +634,10 @@ tr:hover{
 <a href="#" class="active" onclick="openPanel(event,'dashboard')">
 <span>لوحة التحكم</span>
 <div class="icon">🏠</div>
+</a>
+
+<a href="#administration" id="admin-section-link" onclick="openPanel(event,'administration')">
+<span>الإدارة</span><div class="icon" aria-hidden="true">⚙</div>
 </a>
 
 <a href="#" onclick="openPanel(event,'add-book')">
@@ -753,6 +768,18 @@ tr:hover{
 
 <!-- ADD BOOK -->
 
+<section class="panel" id="administration" aria-labelledby="administration-title">
+  <div class="box">
+    <div class="box-header"><h3 id="administration-title">مركز إدارة المكتبة</h3></div>
+    <p>انتقل مباشرة إلى أدوات الكتب والأعضاء والحجوزات والتقارير.</p>
+    <div class="admin-shortcuts">
+      <button type="button" class="btn btn-secondary" data-admin-panel="manage-books">إدارة الكتب</button>
+      <button type="button" class="btn btn-secondary" data-admin-panel="students">قائمة الأعضاء</button>
+      <button type="button" class="btn btn-secondary" data-admin-panel="reservations">حجوزات الكتب</button>
+      <button type="button" class="btn btn-secondary" data-admin-panel="reports">التقارير</button>
+    </div>
+  </div>
+</section>
 <div class="panel" id="add-book">
 <div class="box">
 <div class="box-header">
@@ -1129,6 +1156,7 @@ onclick="exportTableToExcel()">
 </div>
 
 <script type="module">
+import { translate, languageCode } from "./library-language.js?v=portal-en";
 
 /* ================= FIREBASE ================= */
 
@@ -1196,6 +1224,7 @@ panel.classList.add('active');
 
 const titles={
 'dashboard':'لوحة التحكم',
+'administration':'الإدارة',
 'add-book':'إضافة كتاب جديد',
 'manage-books':'إدارة الكتب',
 'new-member':'تسجيل عضو جديد',
@@ -1320,7 +1349,7 @@ const category=document.getElementById('bookCategory').value;
 const copies=Number(document.getElementById('bookCopies').value);
 
 if(!title.trim() || !author.trim() || !Number.isInteger(copies) || copies < 1 || copies > 10000){
-alert('الرجاء تعبئة الحقول');
+alert(translate('الرجاء تعبئة الحقول'));
 return;
 }
 
@@ -1341,11 +1370,11 @@ createdAt:new Date()
 
 });
 } catch (error) {
-alert(error.message || "تعذّر حفظ الكتاب.");
+alert(translate(error.message || "تعذّر حفظ الكتاب."));
 return;
 }
 
-alert('تم إضافة الكتاب');
+alert(translate('تم إضافة الكتاب'));
 
 clearBookForm();
 
@@ -1359,7 +1388,7 @@ updateCounters();
 
 window.deleteBook = async function(id){
 
-if(confirm('هل تريد حذف الكتاب؟')){
+if(confirm(translate('هل تريد حذف الكتاب؟'))){
 
 await deleteDoc(doc(db,"books",id));
 
@@ -1395,7 +1424,7 @@ const email=document.getElementById('memberEmail').value;
 const phone=document.getElementById('memberPhone').value;
 
 if(name==='' || studentId===''){
-alert('أدخل بيانات العضو');
+alert(translate('أدخل بيانات العضو'));
 return;
 }
 
@@ -1412,7 +1441,7 @@ createdAt:new Date()
 
 });
 
-alert('تم تسجيل العضو');
+alert(translate('تم تسجيل العضو'));
 
 clearMemberForm();
 
@@ -1438,7 +1467,7 @@ document.getElementById('memberPhone').value='';
 
 window.deleteMember = async function(id){
 
-if(confirm('حذف العضو؟')){
+if(confirm(translate('حذف العضو؟'))){
 
 await deleteDoc(doc(db,"students",id));
 
@@ -1522,21 +1551,21 @@ window.lendBookNow = async function(){
   const issueDate = document.getElementById("lendDate").value;
   const returnDate = document.getElementById("returnDate").value;
   if (!studentId || !bookId || !issueDate || !returnDate || returnDate < issueDate) {
-    alert("تأكّد من رقم الطالب والكتاب وتواريخ الإعارة.");
+    alert(translate("تأكّد من رقم الطالب والكتاب وتواريخ الإعارة."));
     return;
   }
   if (studentUid && String(account?.studentId) !== studentId) {
-    alert("رقم الطالب لا يطابق الحساب المختار.");
+    alert(translate("رقم الطالب لا يطابق الحساب المختار."));
     return;
   }
   lending = true;
   try {
     await requireLibrarian(app, db);
     await lendBook(db, bookId, { studentId, ...(studentUid ? { studentUid } : {}) }, { issueDate, returnDate });
-    alert("تم تسجيل الإعارة.");
+    alert(translate("تم تسجيل الإعارة."));
     void Promise.all([renderBooks(), updateCounters(), loadTodayActivities()]).catch(console.error);
   } catch (error) {
-    alert(error.code ? "تعذّر تسجيل الإعارة." : error.message);
+    alert(translate(error.code ? "تعذّر تسجيل الإعارة." : error.message));
   } finally {
     lending = false;
   }
@@ -1547,20 +1576,20 @@ window.receiveBook = async function(){
   if (receiving) return;
   const studentId = document.getElementById("returnStudent").value.trim();
   const bookId = document.getElementById("returnBook").value;
-  if (!studentId || !bookId) { alert("اختر الطالب والكتاب."); return; }
+  if (!studentId || !bookId) { alert(translate("اختر الطالب والكتاب.")); return; }
   receiving = true;
   try {
     await requireLibrarian(app, db);
     const snapshot = await getDocs(query(collection(db, "borrows"),
       where("studentId", "==", studentId), where("bookId", "==", bookId), where("status", "==", "borrowed")));
-    if (snapshot.empty) { alert("لا يوجد سجل إعارة مفتوح لهذا الكتاب."); return; }
+    if (snapshot.empty) { alert(translate("لا يوجد سجل إعارة مفتوح لهذا الكتاب.")); return; }
     const loans = [...snapshot.docs].sort((a, b) =>
       String(a.data().issueDate ?? "").localeCompare(String(b.data().issueDate ?? "")) || a.id.localeCompare(b.id));
     await returnLoan(db, loans[0].id);
-    alert("تم تسجيل إرجاع نسخة واحدة.");
+    alert(translate("تم تسجيل إرجاع نسخة واحدة."));
     void Promise.all([renderBooks(), updateCounters(), loadTodayActivities()]).catch(console.error);
   } catch (error) {
-    alert(error.code ? "تعذّر تسجيل الإرجاع." : error.message);
+    alert(translate(error.code ? "تعذّر تسجيل الإرجاع." : error.message));
   } finally {
     receiving = false;
   }
@@ -1696,7 +1725,7 @@ window.logout = function(event){
 
 event.preventDefault();
 
-if(confirm('هل تريد تسجيل الخروج؟')){
+if(confirm(translate('هل تريد تسجيل الخروج؟'))){
 
 window.location.href='admin_login.html';
 
@@ -1706,45 +1735,13 @@ window.location.href='admin_login.html';
 
 /* ================= DATE ================= */
 
-function setDate(){
-
-const today=new Date();
-
-const days=[
-'الأحد',
-'الإثنين',
-'الثلاثاء',
-'الأربعاء',
-'الخميس',
-'الجمعة',
-'السبت'
-];
-
-const months=[
-'يناير',
-'فبراير',
-'مارس',
-'أبريل',
-'مايو',
-'يونيو',
-'يوليو',
-'أغسطس',
-'سبتمبر',
-'أكتوبر',
-'نوفمبر',
-'ديسمبر'
-];
-
-const text=`
-${days[today.getDay()]}
-${today.getDate()}
-${months[today.getMonth()]}
-${today.getFullYear()}
-`;
-
-document.getElementById('dateNow').innerText=text;
-
+function setDate() {
+  const locale = languageCode() === "en" ? "en-GB" : "ar-JO";
+  document.getElementById("dateNow").textContent = new Intl.DateTimeFormat(locale, {
+    weekday: "long", day: "numeric", month: "long", year: "numeric"
+  }).format(new Date());
 }
+
 window.showLibraryInventory = async function(){
 
 document.getElementById('reportTitle').innerText =
@@ -2034,6 +2031,15 @@ link.download = 'report.xls';
 link.click();
 
 }
+document.querySelectorAll("[data-admin-panel]").forEach(button => {
+  button.addEventListener("click", () => {
+    const handler = "openPanel(event,'" + button.dataset.adminPanel + "')";
+    [...document.querySelectorAll(".menu a")].find(link => link.getAttribute("onclick") === handler)?.click();
+  });
+});
+if (location.hash === "#administration") document.getElementById("admin-section-link").click();
+document.addEventListener("library:language", setDate);
+
 /* ================= START ================= */
 
 renderBooks();
