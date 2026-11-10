@@ -184,6 +184,7 @@
   <!-- FIREBASE -->
 
   <script type="module">
+    import { translate } from "./library-language.js?v=home-language";
 
     import { initializeApp }
     from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -259,7 +260,7 @@
         !confirmPassword
       ){
 
-        alert("يرجى تعبئة جميع الحقول");
+        alert(translate("يرجى تعبئة جميع الحقول"));
         return;
       }
 
@@ -268,7 +269,7 @@
 
       if(password !== confirmPassword){
 
-        alert("كلمتا المرور غير متطابقتين");
+        alert(translate("كلمتا المرور غير متطابقتين"));
         return;
       }
 
@@ -302,7 +303,7 @@
         );
 
 
-        alert("تم إنشاء الحساب بنجاح ✅");
+        alert(translate("تم إنشاء الحساب بنجاح ✅"));
 
 
         // REDIRECT

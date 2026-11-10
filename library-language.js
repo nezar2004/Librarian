@@ -542,6 +542,18 @@ for (const [ar, en] of [
   ["فتح قسم الإدارة","Open administration"],
   ["موقع الرف غير محدد","Shelf location unavailable"]
 ]) dictionary.set(ar, en);
+for (const [ar, en] of [
+  ["📝 إنشاء حساب","📝 Create an account"],
+  ["قم بإنشاء حساب جديد للوصول إلى نظام المكتبة","Create an account to access the library system."],
+  ["الإيميل الجامعي","University email"],
+  ["رقم الجامعي الطالب","Student university ID"],
+  ["تأكيد كلمة المرور","Confirm password"],
+  ["إنشاء الحساب","Create account"],
+  ["← العودة لتسجيل الدخول","← Back to sign-in"],
+  ["يرجى تعبئة جميع الحقول","Please complete all fields."],
+  ["كلمتا المرور غير متطابقتين","The passwords don’t match."],
+  ["تم إنشاء الحساب بنجاح ✅","Account created successfully ✅"]
+]) dictionary.set(ar, en);
 const key = "librarian-language";
 let language = "ar";
 try { if (localStorage.getItem(key) === "en") language = "en"; } catch {}
