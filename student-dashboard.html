@@ -452,17 +452,18 @@ textarea{
 }
 
 .library-menu-toggle { display: none; }
-.library-menu-content { display: contents; }
+.library-menu, .library-menu-content { display: contents; }
+.library-menu::details-content { display: contents; }
 @media (max-width: 760px) {
   .library-menu-toggle {
     display: inline-flex; align-items: center; gap: .6rem; min-height: 44px;
+    cursor: pointer;
     width: fit-content; padding: .45rem .8rem; border: 1px solid #45627a;
     border-radius: .65rem; background: #18283d; color: #fff; font: inherit;
   }
-  .library-menu-toggle[aria-expanded="false"] + .library-menu-content { display: none; }
-  .library-menu-toggle[aria-expanded="true"] + .library-menu-content {
-    display: grid; gap: .8rem; max-height: 65dvh; overflow-y: auto;
-  }
+  .library-menu { display: block; }
+  .library-menu:not([open]) > .library-menu-content { display: none; }
+  .library-menu[open] > .library-menu-content { display: grid; gap: .8rem; padding-block-start: .75rem; }
 }
 </style>
 </head>
@@ -472,9 +473,8 @@ textarea{
 <!-- SIDEBAR -->
 
 <aside hidden class="sidebar" tabindex="0" aria-label="قائمة بوابة الطالب">
-<button type="button" class="library-menu-toggle" aria-controls="library-mobile-menu" aria-expanded="false">
-  <span aria-hidden="true">☰</span> القائمة
-</button>
+<details class="library-menu">
+<summary class="library-menu-toggle"><span aria-hidden="true">☰</span> القائمة</summary>
 <div id="library-mobile-menu" class="library-menu-content">
 
 <div>
@@ -556,6 +556,7 @@ textarea{
 <button class="logout">تسجيل الخروج</button>
 
 </div>
+</details>
 </aside>
 
 <!-- CONTENT -->
@@ -971,17 +972,24 @@ onAuthStateChanged(auth, async user => {
 });
 </script>
 <script>
-  const libraryToggle = document.querySelector(".library-menu-toggle");
-  const libraryMenu = document.getElementById("library-mobile-menu");
-  function closeLibraryMenu() {
-    libraryToggle.setAttribute("aria-expanded", "false");
-    if (matchMedia("(max-width: 760px)").matches) libraryToggle.focus();
+  const libraryMenu = document.querySelector(".library-menu");
+  const libraryToggle = libraryMenu.querySelector("summary");
+  const mobileScreen = matchMedia("(max-width: 760px)");
+
+  function syncLibraryMenu() {
+    libraryMenu.open = !mobileScreen.matches;
   }
-  libraryToggle.addEventListener("click", () => {
-    libraryToggle.setAttribute("aria-expanded", String(libraryToggle.getAttribute("aria-expanded") !== "true"));
-  });
+
+  function closeLibraryMenu() {
+    if (!mobileScreen.matches || !libraryMenu.open) return;
+    libraryMenu.open = false;
+    libraryToggle.focus({ preventScroll: true });
+  }
+
+  syncLibraryMenu();
+  mobileScreen.addEventListener("change", syncLibraryMenu);
   libraryMenu.addEventListener("click", event => {
-    if (event.target.closest(".menu a") && libraryToggle.getAttribute("aria-expanded") === "true") closeLibraryMenu();
+    if (event.target.closest(".menu a") && event.isTrusted) closeLibraryMenu();
   });
   libraryMenu.addEventListener("keydown", event => {
     if (event.key === "Escape") closeLibraryMenu();
