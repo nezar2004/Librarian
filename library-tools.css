@@ -117,3 +117,10 @@
 .reservation-embedded .reservation-hero { display: none; }
 .reservation-embedded .reservation-panel:first-of-type { margin-block-start: 0; }
 .reservation-page [hidden] { display: none !important; }
+
+@media (max-width: 640px) {
+  .reservation-page .catalog-header { flex-wrap: wrap; }
+  .reservation-page select { width: 100%; max-width: 100%; }
+  .reservation-panel .catalog-filters { grid-template-columns: minmax(0, 1fr); }
+  .reservation-page .catalog-card h3 { overflow-wrap: anywhere; }
+}

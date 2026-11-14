@@ -273,7 +273,7 @@ body{
 
 .books{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
   gap:25px;
 }
 
@@ -437,6 +437,19 @@ textarea{
 .menu a { gap: .5rem; }
 .menu a span { flex: none; }
 
+
+@media (max-width: 640px) {
+  .content { padding: 14px; min-width: 0; }
+  .sidebar { padding: 14px; gap: .6rem; }
+  .menu a { min-height: 44px; padding: .55rem .65rem; gap: .5rem; overflow-wrap: anywhere; }
+  .box { min-width: 0; padding: 14px; }
+  .topbar, .box-header { flex-wrap: wrap; gap: .55rem; }
+  .topbar :is(h1,h2) { font-size: clamp(1.3rem, 6vw, 1.9rem); }
+  .box :is(input,select,textarea) { max-width: 100%; min-width: 0; }
+  .mobile-table { max-width: 100%; overflow-x: auto; }
+  .mobile-table table { min-width: 30rem; }
+  .mobile-table:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 2px; }
+}
 </style>
 </head>
 <body data-localize-live>
@@ -615,6 +628,7 @@ placeholder="اكتب عنوان الكتاب...">
 📁 كتبي المستعارة حالياً
 </div>
 
+<div class="mobile-table" tabindex="0" role="region" aria-label="Loan records">
 <table class="table" id="borrowed-table">
 
 <tr>
@@ -625,6 +639,7 @@ placeholder="اكتب عنوان الكتاب...">
 </tr>
 
 </table>
+</div>
 
 </div>
 
@@ -669,6 +684,7 @@ placeholder="اكتب عنوان الكتاب...">
 ⏱️ سجل استعاراتي
 </div>
 
+<div class="mobile-table" tabindex="0" role="region" aria-label="Loan records">
 <table class="table" id="history-table">
 
 <tr>
@@ -679,6 +695,7 @@ placeholder="اكتب عنوان الكتاب...">
 </tr>
 
 </table>
+</div>
 
 </div>
 
