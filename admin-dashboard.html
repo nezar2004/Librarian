@@ -609,7 +609,7 @@ tr:hover{
   .mobile-table:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 2px; }
 }
 
-.library-menu-toggle { display: none; }
+.library-menu-toggle, .library-menu-overlay, .library-menu-close { display: none; }
 .library-menu, .library-menu-content { display: contents; }
 .library-menu::details-content { display: contents; }
 @media (max-width: 760px) {
@@ -621,7 +621,38 @@ tr:hover{
   }
   .library-menu { display: block; }
   .library-menu:not([open]) > .library-menu-content { display: none; }
-  .library-menu[open] > .library-menu-content { display: grid; gap: .8rem; padding-block-start: .75rem; }
+  .library-menu[open] > .library-menu-content {
+    position: fixed;
+    z-index: 101;
+    inset: 0 0 0 auto;
+    width: min(85vw, 320px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .8rem;
+    padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+    background: #111827;
+    box-shadow: -12px 0 40px #0006;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    animation: library-slide-in .2s ease-out;
+  }
+  .sidebar:has(.library-menu[open]) { z-index: 100; backdrop-filter: none; overflow: visible; }
+  body:has(.library-menu[open]) { overflow: hidden; }
+  .library-menu[open] > .library-menu-overlay {
+    display: block;
+    position: fixed;
+    z-index: 100;
+    inset: 0;
+    border: 0;
+    background: #0009;
+  }
+  .library-menu-close { display: inline-flex; align-self: flex-end; min-height: 44px; }
+}
+@keyframes library-slide-in { from { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .library-menu[open] > .library-menu-content { animation: none; }
+
 }
 </style>
 <link rel="stylesheet" href="library-tools.css">
@@ -633,7 +664,9 @@ tr:hover{
 <div class="sidebar">
 <details class="library-menu">
 <summary class="library-menu-toggle"><span aria-hidden="true">☰</span> القائمة</summary>
+<button type="button" class="library-menu-overlay" aria-label="إغلاق القائمة" tabindex="-1"></button>
 <div id="library-mobile-menu" class="library-menu-content">
+<button type="button" class="library-menu-toggle library-menu-close">إغلاق القائمة</button>
 
 <div>
 
@@ -2091,6 +2124,12 @@ setDate();
     libraryToggle.focus({ preventScroll: true });
   }
 
+  libraryMenu.querySelector(".library-menu-overlay").addEventListener("click", closeLibraryMenu);
+  const closeButton = libraryMenu.querySelector(".library-menu-close");
+  closeButton.addEventListener("click", closeLibraryMenu);
+  libraryMenu.addEventListener("toggle", () => {
+    if (libraryMenu.open && mobileScreen.matches) closeButton.focus({ preventScroll: true });
+  });
   syncLibraryMenu();
   mobileScreen.addEventListener("change", syncLibraryMenu);
   libraryMenu.addEventListener("click", event => {
