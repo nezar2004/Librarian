@@ -608,6 +608,20 @@ tr:hover{
   .mobile-table table { min-width: 30rem; }
   .mobile-table:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 2px; }
 }
+
+.library-menu-toggle { display: none; }
+.library-menu-content { display: contents; }
+@media (max-width: 760px) {
+  .library-menu-toggle {
+    display: inline-flex; align-items: center; gap: .6rem; min-height: 44px;
+    width: fit-content; padding: .45rem .8rem; border: 1px solid #45627a;
+    border-radius: .65rem; background: #18283d; color: #fff; font: inherit;
+  }
+  .library-menu-toggle[aria-expanded="false"] + .library-menu-content { display: none; }
+  .library-menu-toggle[aria-expanded="true"] + .library-menu-content {
+    display: grid; gap: .8rem; max-height: 65dvh; overflow-y: auto;
+  }
+}
 </style>
 <link rel="stylesheet" href="library-tools.css">
 </head>
@@ -616,6 +630,10 @@ tr:hover{
 <!-- SIDEBAR -->
 
 <div class="sidebar">
+<button type="button" class="library-menu-toggle" aria-controls="library-mobile-menu" aria-expanded="false">
+  <span aria-hidden="true">☰</span> القائمة
+</button>
+<div id="library-mobile-menu" class="library-menu-content">
 
 <div>
 
@@ -695,6 +713,7 @@ tr:hover{
 تسجيل الخروج
 </a>
 
+</div>
 </div>
 
 <!-- MAIN -->
@@ -2056,5 +2075,22 @@ setDate();
 
 </script>
 
+<script>
+  const libraryToggle = document.querySelector(".library-menu-toggle");
+  const libraryMenu = document.getElementById("library-mobile-menu");
+  function closeLibraryMenu() {
+    libraryToggle.setAttribute("aria-expanded", "false");
+    if (matchMedia("(max-width: 760px)").matches) libraryToggle.focus();
+  }
+  libraryToggle.addEventListener("click", () => {
+    libraryToggle.setAttribute("aria-expanded", String(libraryToggle.getAttribute("aria-expanded") !== "true"));
+  });
+  libraryMenu.addEventListener("click", event => {
+    if (event.target.closest(".menu a") && libraryToggle.getAttribute("aria-expanded") === "true") closeLibraryMenu();
+  });
+  libraryMenu.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeLibraryMenu();
+  });
+</script>
 </body>
 </html>
